@@ -5,24 +5,7 @@
   "author": "Sabin Marcu <sabinmarcu@gmail.com>",
   "homepage": "https://github.com/sabinmarcu/contacts-timeline#readme",
   "license": "ISC",
-  "main": "lib/layout.jsx",
-  "directories": {
-    "lib": "lib",
-    "test": "__tests__"
-  },
-  "files": [
-    "lib"
-  ],
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/sabinmarcu/contacts-timeline.git"
-  },
-  "scripts": {
-    "test": "echo \"Error: run tests from root\" && exit 1"
-  },
-  "bugs": {
-    "url": "https://github.com/sabinmarcu/contacts-timeline/issues"
-  },
+  "main": "src/index.jsx",
   "dependencies": {
     "@material-ui/core": "^4.2.0",
     "react": "^16.8.6"
