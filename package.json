@@ -1,5 +1,5 @@
 {
-  "name": "root",
+  "name": "@ct/root",
   "private": true,
   "devDependencies": {
     "@babel/core": "^7.5.4",
@@ -9,6 +9,11 @@
     "@commitlint/cli": "^8.1.0",
     "@commitlint/config-conventional": "^8.1.0",
     "@commitlint/config-lerna-scopes": "^8.1.0",
+    "@storybook/addon-actions": "^5.1.9",
+    "@storybook/addon-links": "^5.1.9",
+    "@storybook/addons": "^5.1.9",
+    "@storybook/react": "^5.1.9",
+    "babel-loader": "^8.0.6",
     "eslint": "5.3.0",
     "eslint-config-airbnb": "17.1.1",
     "eslint-plugin-flowtype": "^3.11.1",
@@ -24,11 +29,16 @@
   ],
   "dependencies": {
     "babel-eslint": "^10.0.2",
+    "core-js": "2.6.5",
     "flow-bin": "^0.102.0"
   },
   "husky": {
     "hooks": {
       "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
     }
+  },
+  "scripts": {
+    "storybook": "start-storybook -p 6006",
+    "build-storybook": "build-storybook"
   }
 }
