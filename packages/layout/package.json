@@ -5,7 +5,7 @@
   "author": "Sabin Marcu <sabinmarcu@gmail.com>",
   "homepage": "https://github.com/sabinmarcu/contacts-timeline#readme",
   "license": "ISC",
-  "main": "lib/layout.js",
+  "main": "lib/layout.jsx",
   "directories": {
     "lib": "lib",
     "test": "__tests__"
@@ -24,6 +24,7 @@
     "url": "https://github.com/sabinmarcu/contacts-timeline/issues"
   },
   "dependencies": {
-    "@material-ui/core": "^4.2.0"
+    "@material-ui/core": "^4.2.0",
+    "react": "^16.8.6"
   }
 }
