@@ -1,9 +1,9 @@
 import React from 'react';
+import ThemeProvider from '@material-ui/styles/ThemeProvider';
 
 function App() {
   return (
-    <div className="App">
-    </div>
+    <ThemeProvider />
   );
 }
 

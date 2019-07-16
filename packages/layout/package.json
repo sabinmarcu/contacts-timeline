@@ -22,5 +22,8 @@
   },
   "bugs": {
     "url": "https://github.com/sabinmarcu/contacts-timeline/issues"
+  },
+  "dependencies": {
+    "@material-ui/core": "^4.2.0"
   }
 }
