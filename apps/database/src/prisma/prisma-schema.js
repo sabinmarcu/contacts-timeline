@@ -3,10 +3,6 @@ export const typeDefs = /* GraphQL */ `type AggregateContact {
   count: Int!
 }
 
-type AggregateConversation {
-  count: Int!
-}
-
 type AggregateHistory {
   count: Int!
 }
@@ -27,10 +23,9 @@ type Contact {
   id: ID!
   username: String!
   phone: String!
-  name: String!
+  name: String
   avatar: String
   cover: String
-  default: Boolean!
 }
 
 type ContactConnection {
@@ -43,10 +38,9 @@ input ContactCreateInput {
   id: ID
   username: String!
   phone: String!
-  name: String!
+  name: String
   avatar: String
   cover: String
-  default: Boolean
 }
 
 input ContactCreateOneInput {
@@ -72,18 +66,15 @@ enum ContactOrderByInput {
   avatar_DESC
   cover_ASC
   cover_DESC
-  default_ASC
-  default_DESC
 }
 
 type ContactPreviousValues {
   id: ID!
   username: String!
   phone: String!
-  name: String!
+  name: String
   avatar: String
   cover: String
-  default: Boolean!
 }
 
 type ContactSubscriptionPayload {
@@ -110,7 +101,6 @@ input ContactUpdateDataInput {
   name: String
   avatar: String
   cover: String
-  default: Boolean
 }
 
 input ContactUpdateInput {
@@ -119,7 +109,6 @@ input ContactUpdateInput {
   name: String
   avatar: String
   cover: String
-  default: Boolean
 }
 
 input ContactUpdateManyMutationInput {
@@ -128,7 +117,6 @@ input ContactUpdateManyMutationInput {
   name: String
   avatar: String
   cover: String
-  default: Boolean
 }
 
 input ContactUpdateOneRequiredInput {
@@ -228,8 +216,6 @@ input ContactWhereInput {
   cover_not_starts_with: String
   cover_ends_with: String
   cover_not_ends_with: String
-  default: Boolean
-  default_not: Boolean
   AND: [ContactWhereInput!]
   OR: [ContactWhereInput!]
   NOT: [ContactWhereInput!]
@@ -241,116 +227,10 @@ input ContactWhereUniqueInput {
   phone: String
 }
 
-type Conversation {
-  id: ID!
-  with: Contact!
-  messages(where: MessageWhereInput, orderBy: MessageOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Message!]
-}
-
-type ConversationConnection {
-  pageInfo: PageInfo!
-  edges: [ConversationEdge]!
-  aggregate: AggregateConversation!
-}
-
-input ConversationCreateInput {
-  id: ID
-  with: ContactCreateOneInput!
-  messages: MessageCreateManyInput
-}
-
-input ConversationCreateOneInput {
-  create: ConversationCreateInput
-  connect: ConversationWhereUniqueInput
-}
-
-type ConversationEdge {
-  node: Conversation!
-  cursor: String!
-}
-
-enum ConversationOrderByInput {
-  id_ASC
-  id_DESC
-}
-
-type ConversationPreviousValues {
-  id: ID!
-}
-
-type ConversationSubscriptionPayload {
-  mutation: MutationType!
-  node: Conversation
-  updatedFields: [String!]
-  previousValues: ConversationPreviousValues
-}
-
-input ConversationSubscriptionWhereInput {
-  mutation_in: [MutationType!]
-  updatedFields_contains: String
-  updatedFields_contains_every: [String!]
-  updatedFields_contains_some: [String!]
-  node: ConversationWhereInput
-  AND: [ConversationSubscriptionWhereInput!]
-  OR: [ConversationSubscriptionWhereInput!]
-  NOT: [ConversationSubscriptionWhereInput!]
-}
-
-input ConversationUpdateDataInput {
-  with: ContactUpdateOneRequiredInput
-  messages: MessageUpdateManyInput
-}
-
-input ConversationUpdateInput {
-  with: ContactUpdateOneRequiredInput
-  messages: MessageUpdateManyInput
-}
-
-input ConversationUpdateOneRequiredInput {
-  create: ConversationCreateInput
-  update: ConversationUpdateDataInput
-  upsert: ConversationUpsertNestedInput
-  connect: ConversationWhereUniqueInput
-}
-
-input ConversationUpsertNestedInput {
-  update: ConversationUpdateDataInput!
-  create: ConversationCreateInput!
-}
-
-input ConversationWhereInput {
-  id: ID
-  id_not: ID
-  id_in: [ID!]
-  id_not_in: [ID!]
-  id_lt: ID
-  id_lte: ID
-  id_gt: ID
-  id_gte: ID
-  id_contains: ID
-  id_not_contains: ID
-  id_starts_with: ID
-  id_not_starts_with: ID
-  id_ends_with: ID
-  id_not_ends_with: ID
-  with: ContactWhereInput
-  messages_every: MessageWhereInput
-  messages_some: MessageWhereInput
-  messages_none: MessageWhereInput
-  AND: [ConversationWhereInput!]
-  OR: [ConversationWhereInput!]
-  NOT: [ConversationWhereInput!]
-}
-
-input ConversationWhereUniqueInput {
-  id: ID
-}
-
 scalar DateTime
 
 type History {
   id: ID!
-  conversation: Conversation!
   start: Message!
   end: Message!
 }
@@ -363,7 +243,6 @@ type HistoryConnection {
 
 input HistoryCreateInput {
   id: ID
-  conversation: ConversationCreateOneInput!
   start: MessageCreateOneInput!
   end: MessageCreateOneInput!
 }
@@ -426,13 +305,11 @@ input HistorySubscriptionWhereInput {
 }
 
 input HistoryUpdateDataInput {
-  conversation: ConversationUpdateOneRequiredInput
   start: MessageUpdateOneRequiredInput
   end: MessageUpdateOneRequiredInput
 }
 
 input HistoryUpdateInput {
-  conversation: ConversationUpdateOneRequiredInput
   start: MessageUpdateOneRequiredInput
   end: MessageUpdateOneRequiredInput
 }
@@ -474,7 +351,6 @@ input HistoryWhereInput {
   id_not_starts_with: ID
   id_ends_with: ID
   id_not_ends_with: ID
-  conversation: ConversationWhereInput
   start: MessageWhereInput
   end: MessageWhereInput
   AND: [HistoryWhereInput!]
@@ -492,6 +368,8 @@ type Message {
   id: ID!
   date: DateTime!
   text: String!
+  from: Contact!
+  to: Contact!
 }
 
 type MessageConnection {
@@ -504,11 +382,8 @@ input MessageCreateInput {
   id: ID
   date: DateTime!
   text: String!
-}
-
-input MessageCreateManyInput {
-  create: [MessageCreateInput!]
-  connect: [MessageWhereUniqueInput!]
+  from: ContactCreateOneInput!
+  to: ContactCreateOneInput!
 }
 
 input MessageCreateOneInput {
@@ -536,48 +411,6 @@ type MessagePreviousValues {
   text: String!
 }
 
-input MessageScalarWhereInput {
-  id: ID
-  id_not: ID
-  id_in: [ID!]
-  id_not_in: [ID!]
-  id_lt: ID
-  id_lte: ID
-  id_gt: ID
-  id_gte: ID
-  id_contains: ID
-  id_not_contains: ID
-  id_starts_with: ID
-  id_not_starts_with: ID
-  id_ends_with: ID
-  id_not_ends_with: ID
-  date: DateTime
-  date_not: DateTime
-  date_in: [DateTime!]
-  date_not_in: [DateTime!]
-  date_lt: DateTime
-  date_lte: DateTime
-  date_gt: DateTime
-  date_gte: DateTime
-  text: String
-  text_not: String
-  text_in: [String!]
-  text_not_in: [String!]
-  text_lt: String
-  text_lte: String
-  text_gt: String
-  text_gte: String
-  text_contains: String
-  text_not_contains: String
-  text_starts_with: String
-  text_not_starts_with: String
-  text_ends_with: String
-  text_not_ends_with: String
-  AND: [MessageScalarWhereInput!]
-  OR: [MessageScalarWhereInput!]
-  NOT: [MessageScalarWhereInput!]
-}
-
 type MessageSubscriptionPayload {
   mutation: MutationType!
   node: Message
@@ -599,38 +432,20 @@ input MessageSubscriptionWhereInput {
 input MessageUpdateDataInput {
   date: DateTime
   text: String
+  from: ContactUpdateOneRequiredInput
+  to: ContactUpdateOneRequiredInput
 }
 
 input MessageUpdateInput {
   date: DateTime
   text: String
-}
-
-input MessageUpdateManyDataInput {
-  date: DateTime
-  text: String
-}
-
-input MessageUpdateManyInput {
-  create: [MessageCreateInput!]
-  update: [MessageUpdateWithWhereUniqueNestedInput!]
-  upsert: [MessageUpsertWithWhereUniqueNestedInput!]
-  delete: [MessageWhereUniqueInput!]
-  connect: [MessageWhereUniqueInput!]
-  set: [MessageWhereUniqueInput!]
-  disconnect: [MessageWhereUniqueInput!]
-  deleteMany: [MessageScalarWhereInput!]
-  updateMany: [MessageUpdateManyWithWhereNestedInput!]
+  from: ContactUpdateOneRequiredInput
+  to: ContactUpdateOneRequiredInput
 }
 
 input MessageUpdateManyMutationInput {
   date: DateTime
   text: String
-}
-
-input MessageUpdateManyWithWhereNestedInput {
-  where: MessageScalarWhereInput!
-  data: MessageUpdateManyDataInput!
 }
 
 input MessageUpdateOneRequiredInput {
@@ -640,18 +455,7 @@ input MessageUpdateOneRequiredInput {
   connect: MessageWhereUniqueInput
 }
 
-input MessageUpdateWithWhereUniqueNestedInput {
-  where: MessageWhereUniqueInput!
-  data: MessageUpdateDataInput!
-}
-
 input MessageUpsertNestedInput {
-  update: MessageUpdateDataInput!
-  create: MessageCreateInput!
-}
-
-input MessageUpsertWithWhereUniqueNestedInput {
-  where: MessageWhereUniqueInput!
   update: MessageUpdateDataInput!
   create: MessageCreateInput!
 }
@@ -693,6 +497,8 @@ input MessageWhereInput {
   text_not_starts_with: String
   text_ends_with: String
   text_not_ends_with: String
+  from: ContactWhereInput
+  to: ContactWhereInput
   AND: [MessageWhereInput!]
   OR: [MessageWhereInput!]
   NOT: [MessageWhereInput!]
@@ -709,11 +515,6 @@ type Mutation {
   upsertContact(where: ContactWhereUniqueInput!, create: ContactCreateInput!, update: ContactUpdateInput!): Contact!
   deleteContact(where: ContactWhereUniqueInput!): Contact
   deleteManyContacts(where: ContactWhereInput): BatchPayload!
-  createConversation(data: ConversationCreateInput!): Conversation!
-  updateConversation(data: ConversationUpdateInput!, where: ConversationWhereUniqueInput!): Conversation
-  upsertConversation(where: ConversationWhereUniqueInput!, create: ConversationCreateInput!, update: ConversationUpdateInput!): Conversation!
-  deleteConversation(where: ConversationWhereUniqueInput!): Conversation
-  deleteManyConversations(where: ConversationWhereInput): BatchPayload!
   createHistory(data: HistoryCreateInput!): History!
   updateHistory(data: HistoryUpdateInput!, where: HistoryWhereUniqueInput!): History
   upsertHistory(where: HistoryWhereUniqueInput!, create: HistoryCreateInput!, update: HistoryUpdateInput!): History!
@@ -753,9 +554,6 @@ type Query {
   contact(where: ContactWhereUniqueInput!): Contact
   contacts(where: ContactWhereInput, orderBy: ContactOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Contact]!
   contactsConnection(where: ContactWhereInput, orderBy: ContactOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ContactConnection!
-  conversation(where: ConversationWhereUniqueInput!): Conversation
-  conversations(where: ConversationWhereInput, orderBy: ConversationOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Conversation]!
-  conversationsConnection(where: ConversationWhereInput, orderBy: ConversationOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ConversationConnection!
   history(where: HistoryWhereUniqueInput!): History
   histories(where: HistoryWhereInput, orderBy: HistoryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [History]!
   historiesConnection(where: HistoryWhereInput, orderBy: HistoryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): HistoryConnection!
@@ -849,7 +647,6 @@ input SnapshotWhereUniqueInput {
 
 type Subscription {
   contact(where: ContactSubscriptionWhereInput): ContactSubscriptionPayload
-  conversation(where: ConversationSubscriptionWhereInput): ConversationSubscriptionPayload
   history(where: HistorySubscriptionWhereInput): HistorySubscriptionPayload
   message(where: MessageSubscriptionWhereInput): MessageSubscriptionPayload
   snapshot(where: SnapshotSubscriptionWhereInput): SnapshotSubscriptionPayload

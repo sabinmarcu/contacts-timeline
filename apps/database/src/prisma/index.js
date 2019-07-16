@@ -17,7 +17,6 @@ export type AtLeastOne<T> = $Shape<T>;
 
 export interface Exists {
   contact(where?: ContactWhereInput): Promise<boolean>;
-  conversation(where?: ConversationWhereInput): Promise<boolean>;
   history(where?: HistoryWhereInput): Promise<boolean>;
   message(where?: MessageWhereInput): Promise<boolean>;
   snapshot(where?: SnapshotWhereInput): Promise<boolean>;
@@ -61,27 +60,6 @@ export interface PrismaInterface {
     first?: Int,
     last?: Int
   }) => ContactConnectionPromise;
-  conversation: (
-    where: ConversationWhereUniqueInput
-  ) => ConversationNullablePromise;
-  conversations: (args?: {
-    where?: ConversationWhereInput,
-    orderBy?: ConversationOrderByInput,
-    skip?: Int,
-    after?: String,
-    before?: String,
-    first?: Int,
-    last?: Int
-  }) => FragmentableArray<Conversation>;
-  conversationsConnection: (args?: {
-    where?: ConversationWhereInput,
-    orderBy?: ConversationOrderByInput,
-    skip?: Int,
-    after?: String,
-    before?: String,
-    first?: Int,
-    last?: Int
-  }) => ConversationConnectionPromise;
   history: (where: HistoryWhereUniqueInput) => HistoryNullablePromise;
   histories: (args?: {
     where?: HistoryWhereInput,
@@ -161,22 +139,6 @@ export interface PrismaInterface {
   }) => ContactPromise;
   deleteContact: (where: ContactWhereUniqueInput) => ContactPromise;
   deleteManyContacts: (where?: ContactWhereInput) => BatchPayloadPromise;
-  createConversation: (data: ConversationCreateInput) => ConversationPromise;
-  updateConversation: (args: {
-    data: ConversationUpdateInput,
-    where: ConversationWhereUniqueInput
-  }) => ConversationPromise;
-  upsertConversation: (args: {
-    where: ConversationWhereUniqueInput,
-    create: ConversationCreateInput,
-    update: ConversationUpdateInput
-  }) => ConversationPromise;
-  deleteConversation: (
-    where: ConversationWhereUniqueInput
-  ) => ConversationPromise;
-  deleteManyConversations: (
-    where?: ConversationWhereInput
-  ) => BatchPayloadPromise;
   createHistory: (data: HistoryCreateInput) => HistoryPromise;
   updateHistory: (args: {
     data: HistoryUpdateInput,
@@ -229,9 +191,6 @@ export interface Subscription {
   contact: (
     where?: ContactSubscriptionWhereInput
   ) => ContactSubscriptionPayloadSubscription;
-  conversation: (
-    where?: ConversationSubscriptionWhereInput
-  ) => ConversationSubscriptionPayloadSubscription;
   history: (
     where?: HistorySubscriptionWhereInput
   ) => HistorySubscriptionPayloadSubscription;
@@ -261,9 +220,9 @@ export type ContactOrderByInput =
   | "avatar_ASC"
   | "avatar_DESC"
   | "cover_ASC"
-  | "cover_DESC"
-  | "default_ASC"
-  | "default_DESC";
+  | "cover_DESC";
+
+export type HistoryOrderByInput = "id_ASC" | "id_DESC";
 
 export type MessageOrderByInput =
   | "id_ASC"
@@ -272,10 +231,6 @@ export type MessageOrderByInput =
   | "date_DESC"
   | "text_ASC"
   | "text_DESC";
-
-export type ConversationOrderByInput = "id_ASC" | "id_DESC";
-
-export type HistoryOrderByInput = "id_ASC" | "id_DESC";
 
 export type SnapshotOrderByInput = "id_ASC" | "id_DESC";
 
@@ -372,15 +327,35 @@ export type ContactWhereInput = {
   cover_not_starts_with?: String,
   cover_ends_with?: String,
   cover_not_ends_with?: String,
-  default?: Boolean,
-  default_not?: Boolean,
   AND?: ContactWhereInput[],
   OR?: ContactWhereInput[],
   NOT?: ContactWhereInput[]
 };
 
-export type ConversationWhereUniqueInput = {
+export type HistoryWhereUniqueInput = {
   id?: ID_Input
+};
+
+export type HistoryWhereInput = {
+  id?: ID_Input,
+  id_not?: ID_Input,
+  id_in?: ID_Input[],
+  id_not_in?: ID_Input[],
+  id_lt?: ID_Input,
+  id_lte?: ID_Input,
+  id_gt?: ID_Input,
+  id_gte?: ID_Input,
+  id_contains?: ID_Input,
+  id_not_contains?: ID_Input,
+  id_starts_with?: ID_Input,
+  id_not_starts_with?: ID_Input,
+  id_ends_with?: ID_Input,
+  id_not_ends_with?: ID_Input,
+  start?: MessageWhereInput,
+  end?: MessageWhereInput,
+  AND?: HistoryWhereInput[],
+  OR?: HistoryWhereInput[],
+  NOT?: HistoryWhereInput[]
 };
 
 export type MessageWhereInput = {
@@ -420,60 +395,11 @@ export type MessageWhereInput = {
   text_not_starts_with?: String,
   text_ends_with?: String,
   text_not_ends_with?: String,
+  from?: ContactWhereInput,
+  to?: ContactWhereInput,
   AND?: MessageWhereInput[],
   OR?: MessageWhereInput[],
   NOT?: MessageWhereInput[]
-};
-
-export type ConversationWhereInput = {
-  id?: ID_Input,
-  id_not?: ID_Input,
-  id_in?: ID_Input[],
-  id_not_in?: ID_Input[],
-  id_lt?: ID_Input,
-  id_lte?: ID_Input,
-  id_gt?: ID_Input,
-  id_gte?: ID_Input,
-  id_contains?: ID_Input,
-  id_not_contains?: ID_Input,
-  id_starts_with?: ID_Input,
-  id_not_starts_with?: ID_Input,
-  id_ends_with?: ID_Input,
-  id_not_ends_with?: ID_Input,
-  with?: ContactWhereInput,
-  messages_every?: MessageWhereInput,
-  messages_some?: MessageWhereInput,
-  messages_none?: MessageWhereInput,
-  AND?: ConversationWhereInput[],
-  OR?: ConversationWhereInput[],
-  NOT?: ConversationWhereInput[]
-};
-
-export type HistoryWhereUniqueInput = {
-  id?: ID_Input
-};
-
-export type HistoryWhereInput = {
-  id?: ID_Input,
-  id_not?: ID_Input,
-  id_in?: ID_Input[],
-  id_not_in?: ID_Input[],
-  id_lt?: ID_Input,
-  id_lte?: ID_Input,
-  id_gt?: ID_Input,
-  id_gte?: ID_Input,
-  id_contains?: ID_Input,
-  id_not_contains?: ID_Input,
-  id_starts_with?: ID_Input,
-  id_not_starts_with?: ID_Input,
-  id_ends_with?: ID_Input,
-  id_not_ends_with?: ID_Input,
-  conversation?: ConversationWhereInput,
-  start?: MessageWhereInput,
-  end?: MessageWhereInput,
-  AND?: HistoryWhereInput[],
-  OR?: HistoryWhereInput[],
-  NOT?: HistoryWhereInput[]
 };
 
 export type MessageWhereUniqueInput = {
@@ -511,10 +437,9 @@ export type ContactCreateInput = {
   id?: ID_Input,
   username: String,
   phone: String,
-  name: String,
+  name?: String,
   avatar?: String,
-  cover?: String,
-  default?: Boolean
+  cover?: String
 };
 
 export type ContactUpdateInput = {
@@ -522,8 +447,7 @@ export type ContactUpdateInput = {
   phone?: String,
   name?: String,
   avatar?: String,
-  cover?: String,
-  default?: Boolean
+  cover?: String
 };
 
 export type ContactUpdateManyMutationInput = {
@@ -531,14 +455,26 @@ export type ContactUpdateManyMutationInput = {
   phone?: String,
   name?: String,
   avatar?: String,
-  cover?: String,
-  default?: Boolean
+  cover?: String
 };
 
-export type ConversationCreateInput = {
+export type HistoryCreateInput = {
   id?: ID_Input,
-  with: ContactCreateOneInput,
-  messages?: MessageCreateManyInput
+  start: MessageCreateOneInput,
+  end: MessageCreateOneInput
+};
+
+export type MessageCreateOneInput = {
+  create?: MessageCreateInput,
+  connect?: MessageWhereUniqueInput
+};
+
+export type MessageCreateInput = {
+  id?: ID_Input,
+  date: DateTimeInput,
+  text: String,
+  from: ContactCreateOneInput,
+  to: ContactCreateOneInput
 };
 
 export type ContactCreateOneInput = {
@@ -546,20 +482,23 @@ export type ContactCreateOneInput = {
   connect?: ContactWhereUniqueInput
 };
 
-export type MessageCreateManyInput = {
-  create?: MessageCreateInput[],
-  connect?: MessageWhereUniqueInput[]
+export type HistoryUpdateInput = {
+  start?: MessageUpdateOneRequiredInput,
+  end?: MessageUpdateOneRequiredInput
 };
 
-export type MessageCreateInput = {
-  id?: ID_Input,
-  date: DateTimeInput,
-  text: String
+export type MessageUpdateOneRequiredInput = {
+  create?: MessageCreateInput,
+  update?: MessageUpdateDataInput,
+  upsert?: MessageUpsertNestedInput,
+  connect?: MessageWhereUniqueInput
 };
 
-export type ConversationUpdateInput = {
-  with?: ContactUpdateOneRequiredInput,
-  messages?: MessageUpdateManyInput
+export type MessageUpdateDataInput = {
+  date?: DateTimeInput,
+  text?: String,
+  from?: ContactUpdateOneRequiredInput,
+  to?: ContactUpdateOneRequiredInput
 };
 
 export type ContactUpdateOneRequiredInput = {
@@ -574,140 +513,12 @@ export type ContactUpdateDataInput = {
   phone?: String,
   name?: String,
   avatar?: String,
-  cover?: String,
-  default?: Boolean
+  cover?: String
 };
 
 export type ContactUpsertNestedInput = {
   update: ContactUpdateDataInput,
   create: ContactCreateInput
-};
-
-export type MessageUpdateManyInput = {
-  create?: MessageCreateInput[],
-  update?: MessageUpdateWithWhereUniqueNestedInput[],
-  upsert?: MessageUpsertWithWhereUniqueNestedInput[],
-  delete?: MessageWhereUniqueInput[],
-  connect?: MessageWhereUniqueInput[],
-  set?: MessageWhereUniqueInput[],
-  disconnect?: MessageWhereUniqueInput[],
-  deleteMany?: MessageScalarWhereInput[],
-  updateMany?: MessageUpdateManyWithWhereNestedInput[]
-};
-
-export type MessageUpdateWithWhereUniqueNestedInput = {
-  where: MessageWhereUniqueInput,
-  data: MessageUpdateDataInput
-};
-
-export type MessageUpdateDataInput = {
-  date?: DateTimeInput,
-  text?: String
-};
-
-export type MessageUpsertWithWhereUniqueNestedInput = {
-  where: MessageWhereUniqueInput,
-  update: MessageUpdateDataInput,
-  create: MessageCreateInput
-};
-
-export type MessageScalarWhereInput = {
-  id?: ID_Input,
-  id_not?: ID_Input,
-  id_in?: ID_Input[],
-  id_not_in?: ID_Input[],
-  id_lt?: ID_Input,
-  id_lte?: ID_Input,
-  id_gt?: ID_Input,
-  id_gte?: ID_Input,
-  id_contains?: ID_Input,
-  id_not_contains?: ID_Input,
-  id_starts_with?: ID_Input,
-  id_not_starts_with?: ID_Input,
-  id_ends_with?: ID_Input,
-  id_not_ends_with?: ID_Input,
-  date?: DateTimeInput,
-  date_not?: DateTimeInput,
-  date_in?: DateTimeInput[],
-  date_not_in?: DateTimeInput[],
-  date_lt?: DateTimeInput,
-  date_lte?: DateTimeInput,
-  date_gt?: DateTimeInput,
-  date_gte?: DateTimeInput,
-  text?: String,
-  text_not?: String,
-  text_in?: String[],
-  text_not_in?: String[],
-  text_lt?: String,
-  text_lte?: String,
-  text_gt?: String,
-  text_gte?: String,
-  text_contains?: String,
-  text_not_contains?: String,
-  text_starts_with?: String,
-  text_not_starts_with?: String,
-  text_ends_with?: String,
-  text_not_ends_with?: String,
-  AND?: MessageScalarWhereInput[],
-  OR?: MessageScalarWhereInput[],
-  NOT?: MessageScalarWhereInput[]
-};
-
-export type MessageUpdateManyWithWhereNestedInput = {
-  where: MessageScalarWhereInput,
-  data: MessageUpdateManyDataInput
-};
-
-export type MessageUpdateManyDataInput = {
-  date?: DateTimeInput,
-  text?: String
-};
-
-export type HistoryCreateInput = {
-  id?: ID_Input,
-  conversation: ConversationCreateOneInput,
-  start: MessageCreateOneInput,
-  end: MessageCreateOneInput
-};
-
-export type ConversationCreateOneInput = {
-  create?: ConversationCreateInput,
-  connect?: ConversationWhereUniqueInput
-};
-
-export type MessageCreateOneInput = {
-  create?: MessageCreateInput,
-  connect?: MessageWhereUniqueInput
-};
-
-export type HistoryUpdateInput = {
-  conversation?: ConversationUpdateOneRequiredInput,
-  start?: MessageUpdateOneRequiredInput,
-  end?: MessageUpdateOneRequiredInput
-};
-
-export type ConversationUpdateOneRequiredInput = {
-  create?: ConversationCreateInput,
-  update?: ConversationUpdateDataInput,
-  upsert?: ConversationUpsertNestedInput,
-  connect?: ConversationWhereUniqueInput
-};
-
-export type ConversationUpdateDataInput = {
-  with?: ContactUpdateOneRequiredInput,
-  messages?: MessageUpdateManyInput
-};
-
-export type ConversationUpsertNestedInput = {
-  update: ConversationUpdateDataInput,
-  create: ConversationCreateInput
-};
-
-export type MessageUpdateOneRequiredInput = {
-  create?: MessageCreateInput,
-  update?: MessageUpdateDataInput,
-  upsert?: MessageUpsertNestedInput,
-  connect?: MessageWhereUniqueInput
 };
 
 export type MessageUpsertNestedInput = {
@@ -717,7 +528,9 @@ export type MessageUpsertNestedInput = {
 
 export type MessageUpdateInput = {
   date?: DateTimeInput,
-  text?: String
+  text?: String,
+  from?: ContactUpdateOneRequiredInput,
+  to?: ContactUpdateOneRequiredInput
 };
 
 export type MessageUpdateManyMutationInput = {
@@ -756,7 +569,6 @@ export type HistoryUpdateWithWhereUniqueNestedInput = {
 };
 
 export type HistoryUpdateDataInput = {
-  conversation?: ConversationUpdateOneRequiredInput,
   start?: MessageUpdateOneRequiredInput,
   end?: MessageUpdateOneRequiredInput
 };
@@ -796,17 +608,6 @@ export type ContactSubscriptionWhereInput = {
   AND?: ContactSubscriptionWhereInput[],
   OR?: ContactSubscriptionWhereInput[],
   NOT?: ContactSubscriptionWhereInput[]
-};
-
-export type ConversationSubscriptionWhereInput = {
-  mutation_in?: MutationType[],
-  updatedFields_contains?: String,
-  updatedFields_contains_every?: String[],
-  updatedFields_contains_some?: String[],
-  node?: ConversationWhereInput,
-  AND?: ConversationSubscriptionWhereInput[],
-  OR?: ConversationSubscriptionWhereInput[],
-  NOT?: ConversationSubscriptionWhereInput[]
 };
 
 export type HistorySubscriptionWhereInput = {
@@ -850,10 +651,9 @@ export interface Contact {
   id: ID_Output;
   username: String;
   phone: String;
-  name: String;
+  name?: String;
   avatar?: String;
   cover?: String;
-  default: Boolean;
 }
 
 export interface ContactPromise extends Promise<Contact>, Fragmentable {
@@ -863,7 +663,6 @@ export interface ContactPromise extends Promise<Contact>, Fragmentable {
   name: () => Promise<String>;
   avatar: () => Promise<String>;
   cover: () => Promise<String>;
-  default: () => Promise<Boolean>;
 }
 
 export interface ContactSubscription
@@ -875,7 +674,6 @@ export interface ContactSubscription
   name: () => Promise<AsyncIterator<String>>;
   avatar: () => Promise<AsyncIterator<String>>;
   cover: () => Promise<AsyncIterator<String>>;
-  default: () => Promise<AsyncIterator<Boolean>>;
 }
 
 export interface ContactNullablePromise
@@ -887,7 +685,6 @@ export interface ContactNullablePromise
   name: () => Promise<String>;
   avatar: () => Promise<String>;
   cover: () => Promise<String>;
-  default: () => Promise<Boolean>;
 }
 
 export interface ContactConnection {
@@ -967,56 +764,30 @@ export interface AggregateContactSubscription
   count: () => Promise<AsyncIterator<Int>>;
 }
 
-export interface Conversation {
+export interface History {
   id: ID_Output;
 }
 
-export interface ConversationPromise
-  extends Promise<Conversation>,
-    Fragmentable {
+export interface HistoryPromise extends Promise<History>, Fragmentable {
   id: () => Promise<ID_Output>;
-  with: <T: ContactPromise>() => T;
-  messages: <T: FragmentableArray<Message>>(args?: {
-    where?: MessageWhereInput,
-    orderBy?: MessageOrderByInput,
-    skip?: Int,
-    after?: String,
-    before?: String,
-    first?: Int,
-    last?: Int
-  }) => T;
+  start: <T: MessagePromise>() => T;
+  end: <T: MessagePromise>() => T;
 }
 
-export interface ConversationSubscription
-  extends Promise<AsyncIterator<Conversation>>,
+export interface HistorySubscription
+  extends Promise<AsyncIterator<History>>,
     Fragmentable {
   id: () => Promise<AsyncIterator<ID_Output>>;
-  with: <T: ContactSubscription>() => T;
-  messages: <T: Promise<AsyncIterator<MessageSubscription>>>(args?: {
-    where?: MessageWhereInput,
-    orderBy?: MessageOrderByInput,
-    skip?: Int,
-    after?: String,
-    before?: String,
-    first?: Int,
-    last?: Int
-  }) => T;
+  start: <T: MessageSubscription>() => T;
+  end: <T: MessageSubscription>() => T;
 }
 
-export interface ConversationNullablePromise
-  extends Promise<Conversation | null>,
+export interface HistoryNullablePromise
+  extends Promise<History | null>,
     Fragmentable {
   id: () => Promise<ID_Output>;
-  with: <T: ContactPromise>() => T;
-  messages: <T: FragmentableArray<Message>>(args?: {
-    where?: MessageWhereInput,
-    orderBy?: MessageOrderByInput,
-    skip?: Int,
-    after?: String,
-    before?: String,
-    first?: Int,
-    last?: Int
-  }) => T;
+  start: <T: MessagePromise>() => T;
+  end: <T: MessagePromise>() => T;
 }
 
 export interface Message {
@@ -1029,6 +800,8 @@ export interface MessagePromise extends Promise<Message>, Fragmentable {
   id: () => Promise<ID_Output>;
   date: () => Promise<DateTimeOutput>;
   text: () => Promise<String>;
+  from: <T: ContactPromise>() => T;
+  to: <T: ContactPromise>() => T;
 }
 
 export interface MessageSubscription
@@ -1037,6 +810,8 @@ export interface MessageSubscription
   id: () => Promise<AsyncIterator<ID_Output>>;
   date: () => Promise<AsyncIterator<DateTimeOutput>>;
   text: () => Promise<AsyncIterator<String>>;
+  from: <T: ContactSubscription>() => T;
+  to: <T: ContactSubscription>() => T;
 }
 
 export interface MessageNullablePromise
@@ -1045,91 +820,8 @@ export interface MessageNullablePromise
   id: () => Promise<ID_Output>;
   date: () => Promise<DateTimeOutput>;
   text: () => Promise<String>;
-}
-
-export interface ConversationConnection {
-  pageInfo: PageInfo;
-  edges: ConversationEdge[];
-}
-
-export interface ConversationConnectionPromise
-  extends Promise<ConversationConnection>,
-    Fragmentable {
-  pageInfo: <T: PageInfoPromise>() => T;
-  edges: <T: FragmentableArray<ConversationEdge>>() => T;
-  aggregate: <T: AggregateConversationPromise>() => T;
-}
-
-export interface ConversationConnectionSubscription
-  extends Promise<AsyncIterator<ConversationConnection>>,
-    Fragmentable {
-  pageInfo: <T: PageInfoSubscription>() => T;
-  edges: <T: Promise<AsyncIterator<ConversationEdgeSubscription>>>() => T;
-  aggregate: <T: AggregateConversationSubscription>() => T;
-}
-
-export interface ConversationEdge {
-  node: Conversation;
-  cursor: String;
-}
-
-export interface ConversationEdgePromise
-  extends Promise<ConversationEdge>,
-    Fragmentable {
-  node: <T: ConversationPromise>() => T;
-  cursor: () => Promise<String>;
-}
-
-export interface ConversationEdgeSubscription
-  extends Promise<AsyncIterator<ConversationEdge>>,
-    Fragmentable {
-  node: <T: ConversationSubscription>() => T;
-  cursor: () => Promise<AsyncIterator<String>>;
-}
-
-export interface AggregateConversation {
-  count: Int;
-}
-
-export interface AggregateConversationPromise
-  extends Promise<AggregateConversation>,
-    Fragmentable {
-  count: () => Promise<Int>;
-}
-
-export interface AggregateConversationSubscription
-  extends Promise<AsyncIterator<AggregateConversation>>,
-    Fragmentable {
-  count: () => Promise<AsyncIterator<Int>>;
-}
-
-export interface History {
-  id: ID_Output;
-}
-
-export interface HistoryPromise extends Promise<History>, Fragmentable {
-  id: () => Promise<ID_Output>;
-  conversation: <T: ConversationPromise>() => T;
-  start: <T: MessagePromise>() => T;
-  end: <T: MessagePromise>() => T;
-}
-
-export interface HistorySubscription
-  extends Promise<AsyncIterator<History>>,
-    Fragmentable {
-  id: () => Promise<AsyncIterator<ID_Output>>;
-  conversation: <T: ConversationSubscription>() => T;
-  start: <T: MessageSubscription>() => T;
-  end: <T: MessageSubscription>() => T;
-}
-
-export interface HistoryNullablePromise
-  extends Promise<History | null>,
-    Fragmentable {
-  id: () => Promise<ID_Output>;
-  conversation: <T: ConversationPromise>() => T;
-  start: <T: MessagePromise>() => T;
-  end: <T: MessagePromise>() => T;
+  from: <T: ContactPromise>() => T;
+  to: <T: ContactPromise>() => T;
 }
 
 export interface HistoryConnection {
@@ -1388,10 +1080,9 @@ export interface ContactPreviousValues {
   id: ID_Output;
   username: String;
   phone: String;
-  name: String;
+  name?: String;
   avatar?: String;
   cover?: String;
-  default: Boolean;
 }
 
 export interface ContactPreviousValuesPromise
@@ -1403,7 +1094,6 @@ export interface ContactPreviousValuesPromise
   name: () => Promise<String>;
   avatar: () => Promise<String>;
   cover: () => Promise<String>;
-  default: () => Promise<Boolean>;
 }
 
 export interface ContactPreviousValuesSubscription
@@ -1415,48 +1105,6 @@ export interface ContactPreviousValuesSubscription
   name: () => Promise<AsyncIterator<String>>;
   avatar: () => Promise<AsyncIterator<String>>;
   cover: () => Promise<AsyncIterator<String>>;
-  default: () => Promise<AsyncIterator<Boolean>>;
-}
-
-export interface ConversationSubscriptionPayload {
-  mutation: MutationType;
-  node: Conversation;
-  updatedFields: String[];
-  previousValues: ConversationPreviousValues;
-}
-
-export interface ConversationSubscriptionPayloadPromise
-  extends Promise<ConversationSubscriptionPayload>,
-    Fragmentable {
-  mutation: () => Promise<MutationType>;
-  node: <T: ConversationPromise>() => T;
-  updatedFields: () => Promise<String[]>;
-  previousValues: <T: ConversationPreviousValuesPromise>() => T;
-}
-
-export interface ConversationSubscriptionPayloadSubscription
-  extends Promise<AsyncIterator<ConversationSubscriptionPayload>>,
-    Fragmentable {
-  mutation: () => Promise<AsyncIterator<MutationType>>;
-  node: <T: ConversationSubscription>() => T;
-  updatedFields: () => Promise<AsyncIterator<String[]>>;
-  previousValues: <T: ConversationPreviousValuesSubscription>() => T;
-}
-
-export interface ConversationPreviousValues {
-  id: ID_Output;
-}
-
-export interface ConversationPreviousValuesPromise
-  extends Promise<ConversationPreviousValues>,
-    Fragmentable {
-  id: () => Promise<ID_Output>;
-}
-
-export interface ConversationPreviousValuesSubscription
-  extends Promise<AsyncIterator<ConversationPreviousValues>>,
-    Fragmentable {
-  id: () => Promise<AsyncIterator<ID_Output>>;
 }
 
 export interface HistorySubscriptionPayload {
@@ -1600,14 +1248,14 @@ The `String` scalar type represents textual data, represented as UTF-8 character
 export type String = string;
 
 /*
-The `Boolean` scalar type represents `true` or `false`.
-*/
-export type Boolean = boolean;
-
-/*
 The `Int` scalar type represents non-fractional signed whole numeric values. Int can represent values between -(2^31) and 2^31 - 1.
 */
 export type Int = number;
+
+/*
+The `Boolean` scalar type represents `true` or `false`.
+*/
+export type Boolean = boolean;
 
 /*
 DateTime scalar input type, allowing Date
@@ -1632,10 +1280,6 @@ export const models: Model[] = [
   },
   {
     name: "Message",
-    embedded: false
-  },
-  {
-    name: "Conversation",
     embedded: false
   },
   {
