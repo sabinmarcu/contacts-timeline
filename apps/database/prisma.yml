@@ -1,0 +1,16 @@
+# Specifies the HTTP endpoint of your Prisma API.
+endpoint: ${env:PRISMA_ENDPOINT}
+
+# Defines your models, each model is mapped to the database as a collection.
+datamodel: ./src/schema.prisma
+
+# Specifies the language and directory for the generated Prisma client.
+generate:
+  - generator: flow-client
+    output: ./src/prisma
+  - generator: graphql-schema
+    output: ./src/schema.graphql
+
+# Seeds initial data into the database by running a script.
+seed:
+  run: babel-node ./src/seed.js

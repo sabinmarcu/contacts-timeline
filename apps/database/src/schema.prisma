@@ -1,0 +1,33 @@
+type Contact {
+  id: ID! @id
+  username: String! @unique
+  phone: String! @unique
+  name: String! 
+  avatar: String
+  cover: String
+  default: Boolean! @default(value: false)
+}
+
+type Message {
+  id: ID! @id
+  date: DateTime!
+  text: String!
+}
+
+type Conversation {
+  id: ID! @id
+  with: Contact!
+  messages: [Message!]!
+}
+
+type History {
+  id: ID! @id
+  conversation: Conversation!
+  start: Message! @relation(name: "StartMessage")
+  end: Message! @relation(name: "EndMessage")
+}
+
+type Snapshot {
+  id: ID! @id
+  conversations: [History!]!
+}
