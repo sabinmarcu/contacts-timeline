@@ -42,7 +42,7 @@ module.exports = (config) => {
   const cssLoaders = rules.filter(({ test }) => `${test}`.match(/[^s]css/));
   cssLoaders.forEach(({ use }) => {
     use.forEach((loader) => {
-      if (loader.options.sourceMap) {
+      if (loader.options && loader.options.sourceMap) {
         loader.options.sourceMap = DEV;
       }
     });

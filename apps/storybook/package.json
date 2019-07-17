@@ -1,0 +1,14 @@
+{
+  "name": "@ct/storybook",
+  "version": "0.1.0",
+  "private": true,
+  
+  "scripts": {
+    "start": "start-storybook -p 8000 -c ../../.storybook",
+    "build": "build-storybook -o build -c ../../.storybook",
+    "deploy": "export NODE_ENV=production && dotenv-load yarn build && dotenv-load netlify deploy --dir build --prod",
+    "deploy:stage": "export NODE_ENV=production && dotenv-load yarn build && dotenv-load netlify deploy --dir build",
+    "deploy:staging": "export NODE_ENV=staging && dotenv-load yarn build && dotenv-load netlify deploy --dir build --prod",
+    "deploy:staging:stage": "export NODE_ENV=staging && dotenv-load yarn build && dotenv-load netlify deploy --dir build"
+  }
+}
