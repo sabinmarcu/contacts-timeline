@@ -11,7 +11,7 @@
   "scripts": {
     "start": "docker-compose up -d && yarn deploy:local",
     "start:force": "docker-compose up -d --force-recreate ",
-    "deploy": "prisma deploy --e .env.production",
+    "deploy": "prisma deploy -e .env.production",
     "deploy:staging": "prisma deploy -e .env.staging",
     "deploy:local": "prisma deploy",
     "deploy:local:clean": "prisma reset -f && prisma deploy && prisma seed",

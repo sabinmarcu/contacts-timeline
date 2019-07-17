@@ -41,14 +41,21 @@ module.exports = (config) => {
   });
   const cssLoaders = rules.filter(({ test }) => `${test}`.match(/[^s]css/));
   cssLoaders.forEach(({ use }) => {
-    const cssLoaderIndex = use.findIndex(({ loader }) => loader && loader.includes('css-loader'));
-    use[cssLoaderIndex].options.sourceMap = DEV;
-    use.splice(cssLoaderIndex, 0, {
-      loader: MiniCssExtractPlugin.loader,
-      options: {
-        hmr: DEV,
-      },
+    use.forEach((loader) => {
+      if (loader.options.sourceMap) {
+        loader.options.sourceMap = DEV;
+      }
     });
+    const miniCssLoader = use.find(({ loader }) => loader && loader.includes('mini-css-extract-plugin'));
+    if (!miniCssLoader) {
+      const cssLoaderIndex = use.findIndex(({ loader }) => loader && loader.includes('css-loader'));
+      use.splice(cssLoaderIndex, 0, {
+        loader: MiniCssExtractPlugin.loader,
+        options: {
+          hmr: DEV,
+        },
+      });
+    }
   });
   config.plugins.push(new MiniCssExtractPlugin({
     filename: 'styles.css',

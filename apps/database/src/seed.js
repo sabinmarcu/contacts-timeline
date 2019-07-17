@@ -18,30 +18,27 @@ const maxConversations = 3;
     }
 
     const messages = await Promise.all(
-      (new Array(contactsNumber))
+      (new Array(
+        Math.min(parseInt(Math.random() * (maxConversations - 1) + 1, 10), index),
+      ))
         .fill(0)
-        .map(async (_: any, contactIndex: number) => (new Array(
-          Math.min(parseInt(Math.random() * (maxConversations - 1) + 1, 10), index),
-        ))
-          .fill(0)
-          .map(async () => Promise.all(
-            (new Array(messagesNumber))
-              .fill(0)
-              .map(async () => prisma.createMessage({
-                ...makeMessage(),
-                from: {
-                  connect: {
-                    id: contacts[contactIndex].id,
-                  },
+        .map(async () => Promise.all(
+          (new Array(messagesNumber))
+            .fill(0)
+            .map(async () => prisma.createMessage({
+              ...makeMessage(),
+              from: {
+                connect: {
+                  id: contacts[index].id,
                 },
-                to: {
-                  connect: {
-                    id: contacts[parseInt(Math.random() * (contactIndex - 1), 10)].id,
-                  },
+              },
+              to: {
+                connect: {
+                  id: contacts[parseInt(Math.random() * (index - 1), 10)].id,
                 },
-              })),
-          )))
-        .reduce((prev, it) => [...prev, it], []),
+              },
+            })),
+        )),
     );
 
     return messages;

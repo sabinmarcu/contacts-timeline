@@ -32,7 +32,8 @@
   "dependencies": {
     "babel-eslint": "^10.0.2",
     "core-js": "2.6.5",
-    "flow-bin": "^0.102.0"
+    "flow-bin": "^0.102.0",
+    "netlify-cli": "^2.11.26"
   },
   "husky": {
     "hooks": {
