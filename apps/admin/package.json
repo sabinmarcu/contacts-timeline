@@ -17,7 +17,11 @@
     "start": "react-app-rewired start",
     "build": "react-app-rewired build",
     "test": "react-app-rewired test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "deploy": "export NODE_ENV=production && dotenv-load yarn build && dotenv-load netlify deploy --dir build --prod",
+    "deploy:stage": "export NODE_ENV=production && dotenv-load yarn build && dotenv-load netlify deploy --dir build",
+    "deploy:staging": "export NODE_ENV=staging && dotenv-load yarn build && dotenv-load netlify deploy --dir build --prod",
+    "deploy:staging:stage": "export NODE_ENV=staging && dotenv-load yarn build && dotenv-load netlify deploy --dir build"
   },
   "browserslist": {
     "production": [
