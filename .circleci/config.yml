@@ -115,10 +115,9 @@ workflows:
               only:
                 - master
       - deploy-staging:
-          triggers:
-            - schedule:
-                cron: "0 0 * * *"
-                filters:
-                  branches:
-                    only:
-                      - develop
+          requires: 
+            - test 
+          filters:
+            branches:
+              only:
+                - develop
