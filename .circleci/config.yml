@@ -70,7 +70,7 @@ jobs:
 
       - run: 
           name: "Login to Prisma"
-          command: prisma login
+          command: yarn prisma-login
               
       - run: 
           name: "Deploy Production"
@@ -93,7 +93,7 @@ jobs:
               
       - run: 
           name: "Login to Prisma"
-          command: prisma login
+          command: yarn prisma-login
 
       - run: 
           name: "Deploy Staging"
