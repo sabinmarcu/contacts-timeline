@@ -10,6 +10,11 @@ module.exports = (config) => {
   const rules = rulesParent ? rulesParent.oneOf : config.module.rules;
   const babelLoaders = rules.filter(({ test }) => `${test}`.includes('js'));
   babelLoaders.forEach((babelLoader) => {
+    if (!DEV && babelLoader.options) {
+      delete babelLoader.options.cacheDirectory;
+      delete babelLoader.options.cacheCompression;
+      delete babelLoader.options.cacheIdentifier;
+    }
     const babelLoaderVariables = babelLoader.loader && babelLoader.options
       ? {
         loader: babelLoader.loader,
@@ -24,7 +29,6 @@ module.exports = (config) => {
         loader: 'linaria/loader',
         options: {
           sourceMap: DEV,
-          cacheDirectory: 'src/.linaria_cache',
           babelOptions: {
             ...babelLoaderVariables.options,
           },
@@ -42,6 +46,9 @@ module.exports = (config) => {
       ];
     }
   });
+  // console.log(babelLoaders);
+  // console.log(JSON.stringify(babelLoaders));
+  // process.exit(0);
   const cssLoaders = rules.filter(({ test }) => `${test}`.match(/[^s]css/));
   cssLoaders.forEach(({ use }) => {
     use.forEach((loader) => {
