@@ -42,6 +42,9 @@
     "apps": "apps/*/src"
   },
   "scripts": {
-    "start": "lerna run start --parallel"
+    "start": "lerna run start --parallel",
+    "test": "lerna run test --parallel",
+    "deploy": "lerna run deploy",
+    "deploy:staging": "lerna run deploy:staging"
   }
 }
