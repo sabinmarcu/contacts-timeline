@@ -45,6 +45,7 @@
     "start": "lerna run start --parallel",
     "test": "lerna run test --parallel",
     "deploy": "lerna run deploy",
-    "deploy:staging": "lerna run deploy:staging"
+    "deploy:staging": "lerna run deploy:staging",
+    "bootstrap": "lerna bootstrap"
   }
 }
