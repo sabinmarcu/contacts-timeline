@@ -115,8 +115,6 @@ workflows:
               only:
                 - master
       - deploy-staging:
-          requires: 
-            - test 
           triggers:
             - schedule:
                 cron: "0 0 * * *"
