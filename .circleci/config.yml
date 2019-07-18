@@ -106,3 +106,10 @@ workflows:
             branches:
               only:
                 - master
+      - deploy-staging:
+          requires: 
+            - test 
+          filters:
+            branches:
+              only:
+                - develop

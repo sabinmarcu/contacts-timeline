@@ -35,16 +35,13 @@ module.exports = (config) => {
     delete babelLoader.options;
     if (babelLoader.include) {
       babelLoader.include = [
-        ...(babelLoader.substr ? [babelLoader.include] : babelLoader.include),
+        ...(babelLoader.include.substr ? [babelLoader.include] : babelLoader.include),
         resolve(__dirname, '../../../../apps'),
         resolve(__dirname, '../../../../packages'),
         /\.jsx$/g,
       ];
     }
   });
-  // console.log(babelLoaders);
-  // console.log(JSON.stringify(babelLoaders));
-  // process.exit(0);
   const cssLoaders = rules.filter(({ test }) => `${test}`.match(/[^s]css/));
   cssLoaders.forEach(({ use }) => {
     use.forEach((loader) => {
