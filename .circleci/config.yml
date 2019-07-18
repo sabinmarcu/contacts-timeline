@@ -20,12 +20,16 @@ jobs:
             - v1-dependencies-
 
       - run: 
-          name: "Install dependencies" 
-          command: yarn install
+          name: "Install Lerna"
+          command: yarn global add lerna
 
       - run: 
           name: "Bootstrap Lerna"
           command: lerna bootstrap
+
+      - run: 
+          name: "Install dependencies" 
+          command: yarn install
 
       - save_cache:
           paths:
