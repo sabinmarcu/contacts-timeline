@@ -1,5 +1,10 @@
+// @flow
+
+import { entities } from '@ct/generators';
+
 import { prisma, type Contact } from './prisma';
-import { makeContact, makeMessage } from './generators';
+
+const { makeContact, makeMessage } = entities;
 
 const contactsNumber = 5;
 const messagesNumber = 5;
@@ -44,11 +49,3 @@ const maxConversations = 3;
     return messages;
   });
 })();
-
-
-// contactA: {
-//   connect: contact,
-//           },
-// contactB: {
-//   connect: contacts[parseInt(Math.random() * index, 10)],
-//           },

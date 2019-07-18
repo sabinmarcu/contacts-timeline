@@ -1,3 +1,10 @@
+// @flow
+
+import type {
+  Contact,
+  Message,
+} from '@ct/prisma';
+
 import {
   name,
   internet,
@@ -7,7 +14,8 @@ import {
   date,
 } from 'faker';
 
-export const makeContact = () => ({
+export const makeContact = (): Contact => ({
+  id: lorem.slug(),
   name: `${name.firstName()} ${name.lastName()}`,
   username: internet.userName(),
   phone: phone.phoneNumber(),
@@ -15,7 +23,8 @@ export const makeContact = () => ({
   cover: image.animals(),
 });
 
-export const makeMessage = () => ({
+export const makeMessage = (): Message => ({
+  id: lorem.slug(),
   text: lorem.text(),
   date: new Date((
     Math.random() >= 0.5
