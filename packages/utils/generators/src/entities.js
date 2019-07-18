@@ -26,9 +26,9 @@ export const makeContact = (): Contact => ({
 export const makeMessage = (): Message => ({
   id: lorem.slug(),
   text: lorem.text(),
-  date: new Date((
+  date: (
     Math.random() >= 0.5
       ? date.past
       : date.future
-  )()),
+  )(),
 });
