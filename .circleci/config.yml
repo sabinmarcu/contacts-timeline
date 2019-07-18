@@ -20,12 +20,12 @@ jobs:
             - v1-dependencies-
 
       - run: 
-          name: "Bootstrap Lerna"
-          command: lerna bootstrap
-
-      - run: 
           name: "Install dependencies" 
           command: yarn install
+
+      - run: 
+          name: "Bootstrap Lerna"
+          command: lerna bootstrap
 
       - save_cache:
           key: v1-dependencies-{{ checksum "yarn.lock" }}
