@@ -12,16 +12,16 @@ jobs:
     steps:
       - checkout
 
-      - run: 
-          name: "Install Lerna"
-          command: yarn global add lerna
-
       # Download and cache dependencies
       - restore_cache:
           keys:
-            - v1-dependencies-{{ checksum "package.json" }}
+            - yarn-packages-{{ checksum "yarn.lock" }}
             # fallback to using the latest cache if no exact match is found
-            - v1-dependencies-
+            - yarn-packages-
+
+      - run: 
+          name: "Install Lerna"
+          command: yarn add lerna
 
       - run: 
           name: "Bootstrap Lerna"
@@ -32,9 +32,9 @@ jobs:
           command: yarn install
 
       - save_cache:
+          key: yarn-packages-{{ checksum "yarn.lock" }}
           paths:
-            - node_modules
-          key: v1-dependencies-{{ checksum "package.json" }}
+            - ~/.cache/yarn
 
   test:
     docker:
