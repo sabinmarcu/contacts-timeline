@@ -95,18 +95,5 @@ workflows:
     jobs: 
       - build
       - test:
-        requires: 
-          - build
-      - deploy: 
-        requires: 
-          - test
-      - deploy-staging: 
-        triggers:
-          - schedule:
-              cron: "0 0 * * *"
-              filters:
-                branches:
-                  only:
-                    - develop
-        requires: 
-          - test
+          requires: 
+            - build
