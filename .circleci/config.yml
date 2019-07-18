@@ -67,9 +67,13 @@ jobs:
             - v1-dependencies-{{ checksum "yarn.lock" }}
             # fallback to using the latest cache if no exact match is found
             - v1-dependencies-
+
+      - run: 
+          name: "Login to Prisma"
+          command: prisma login
               
       - run: 
-          name: "Run Tests"
+          name: "Deploy Production"
           command: yarn deploy
 
   deploy-staging:
@@ -88,7 +92,11 @@ jobs:
             - v1-dependencies-
               
       - run: 
-          name: "Run Tests"
+          name: "Login to Prisma"
+          command: prisma login
+
+      - run: 
+          name: "Deploy Staging"
           command: yarn deploy:staging
 
 workflows: 

@@ -2562,6 +2562,11 @@
   dependencies:
     core-js "^3.0.1"
 
+"@storybook/client-logger@^3.3.0-alpha.4":
+  version "3.4.12"
+  resolved "https://registry.yarnpkg.com/@storybook/client-logger/-/client-logger-3.4.12.tgz#060a335cb560e4f0a0b61b358bac95a7529ef3d3"
+  integrity sha512-5nr3eSOYKUnWB6tlQ0c3GTfEoeD7+gVsFEQw5zgo131gElVuRkdBqI3kGT4us7MmspKkmCcyYjAm94Dn7YNRhA==
+
 "@storybook/components@5.1.9":
   version "5.1.9"
   resolved "https://registry.yarnpkg.com/@storybook/components/-/components-5.1.9.tgz#2a5258780fff07172d103287759946dbb4b13e2d"
