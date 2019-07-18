@@ -1,5 +1,6 @@
 /* eslint-disable import/no-extraneous-dependencies,no-param-reassign */
 
+const { resolve } = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 const DEV = process.env.NODE_ENV !== 'production';
@@ -25,7 +26,7 @@ module.exports = (config) => {
           sourceMap: DEV,
           cacheDirectory: 'src/.linaria_cache',
           babelOptions: {
-            presets: babelLoaderVariables.options.presets,
+            ...babelLoaderVariables.options,
           },
         },
       },
@@ -34,11 +35,16 @@ module.exports = (config) => {
     delete babelLoader.options;
     if (babelLoader.include) {
       babelLoader.include = [
-        babelLoader.include,
+        ...(babelLoader.substr ? [babelLoader.include] : babelLoader.include),
+        resolve(__dirname, '../../../../apps'),
+        resolve(__dirname, '../../../../packages'),
         /\.jsx$/g,
       ];
     }
   });
+  // console.log(babelLoaders);
+  // console.log(JSON.stringify(babelLoaders));
+  // process.exit(0);
   const cssLoaders = rules.filter(({ test }) => `${test}`.match(/[^s]css/));
   cssLoaders.forEach(({ use }) => {
     use.forEach((loader) => {

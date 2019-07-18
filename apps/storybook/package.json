@@ -2,10 +2,16 @@
   "name": "@ct/storybook",
   "version": "0.1.0",
   "private": true,
-  
+  "dependencies": {
+    "@storybook/addon-actions": "^5.1.9",
+    "@storybook/addon-links": "^5.1.9",
+    "@storybook/addons": "^5.1.9",
+    "@storybook/react": "^5.1.9",
+    "@ct/tweaks": "^0.1.0"
+  },
   "scripts": {
-    "start": "start-storybook -p 8000 -c ../../.storybook",
-    "build": "build-storybook -o build -c ../../.storybook",
+    "start": "start-storybook -p 8000 -c .",
+    "build": "build-storybook -o build -c .",
     "deploy": "export NODE_ENV=production && dotenv-load yarn build && dotenv-load netlify deploy --dir build --prod",
     "deploy:stage": "export NODE_ENV=production && dotenv-load yarn build && dotenv-load netlify deploy --dir build",
     "deploy:staging": "export NODE_ENV=staging && dotenv-load yarn build && dotenv-load netlify deploy --dir build --prod",

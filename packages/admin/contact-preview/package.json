@@ -1,5 +1,5 @@
 {
-  "name": "@ct/layout",
+  "name": "@ct/contact-preview",
   "version": "1.0.0",
   "description": "> TODO: description",
   "author": "Sabin Marcu <sabinmarcu@gmail.com>",
@@ -7,7 +7,13 @@
   "license": "ISC",
   "main": "src/index.jsx",
   "dependencies": {
+    "@material-ui/styles": "^4.2.0",
     "@material-ui/core": "^4.2.0",
     "react": "^16.8.6"
+  },
+  "devDependencies": {
+    "@storybook/client-logger": "^3.3.0-alpha.4",
+    "@storybook/react": "^5.1.9",
+    "@ct/themes": "^0.1.0"
   }
 }
