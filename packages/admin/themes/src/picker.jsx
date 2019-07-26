@@ -22,7 +22,7 @@ import { type ThemeFormat } from './themes/types';
 const ThemePicker = ({
   themes = {},
   children,
-} : {
+}: {
   themes: { [key: string]: ThemeFormat },
   children: any,
 }) => {

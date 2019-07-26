@@ -2,7 +2,7 @@ import React from 'react';
 import { AppBar, Toolbar, Typography } from '@material-ui/core';
 
 const Navigation = () => (
-  <AppBar>
+  <AppBar position="static">
     <Toolbar>
       <Typography variant="h6" color="default">
         Awesome Stuff
