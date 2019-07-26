@@ -9,11 +9,15 @@
   "dependencies": {
     "@material-ui/styles": "^4.2.0",
     "@material-ui/core": "^4.2.0",
-    "react": "^16.8.6"
+    "react": "^16.8.6",
+    "linaria": "^1.3.1",
+    "@ct/prisma": "^0.1.0"
   },
   "devDependencies": {
     "@storybook/client-logger": "^3.3.0-alpha.4",
     "@storybook/react": "^5.1.9",
-    "@ct/themes": "^0.1.0"
+    "@ct/storybook": "^0.1.0",
+    "@ct/themes": "^0.1.0",
+    "@ct/generators": "^0.1.0"
   }
 }

@@ -3,14 +3,53 @@
 
 import React from 'react';
 import { storiesOf } from '@storybook/react';
+import { action } from '@storybook/addon-actions';
 
+import { makeContact } from '@ct/generators/src/entities';
 import { StoryThemeShowcase } from '@ct/themes';
-import Navigation from './index';
+import { Layout, Section } from '@ct/storybook';
+import Preview from './index';
+
+const PreviewItem = () => (
+  <Preview
+    contact={makeContact()}
+    onEdit={action('Edit Clicked')}
+    onRemove={action('Remove Clicked')}
+  />
+);
+
+const Showcase = () => (
+  <StoryThemeShowcase variant="horizontal">
+    <PreviewItem />
+  </StoryThemeShowcase>
+);
 
 storiesOf('Contact Preview', module)
-  .add('Barebones', () => <Navigation />)
-  .add('Styled', () => (
-    <StoryThemeShowcase variant="vertical">
-      <Navigation />
-    </StoryThemeShowcase>
+  .add('Showcase', () => (
+    <Layout>
+      <Showcase />
+    </Layout>
+  ))
+  .add('Layouting', () => (
+    <Layout>
+      <Section title="Flex Row">
+        <PreviewItem />
+      </Section>
+      <Section title="Grid 2 Columns" variant="col2">
+        <PreviewItem />
+        <PreviewItem />
+        <PreviewItem />
+        <PreviewItem />
+        <PreviewItem />
+        <PreviewItem />
+      </Section>
+      <Section title="Grid 3 Columns" variant="col3">
+        <PreviewItem />
+        <PreviewItem />
+        <PreviewItem />
+        <PreviewItem />
+        <PreviewItem />
+        <PreviewItem />
+      </Section>
+    </Layout>
   ));

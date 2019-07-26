@@ -40,6 +40,7 @@ const Styles: {
   list: {
     base: {
       display: 'flex',
+      flex: 1,
     },
     variants: {
       horizontal: {
@@ -53,8 +54,7 @@ const Styles: {
   item: {
     base: {
       flex: 1,
-      display: 'flex',
-      flexFlow: 'column nowrap',
+      margin: 10,
     },
     variants: {},
   },
@@ -97,30 +97,28 @@ const ThemeShowcase = ({
       ...getVariant(Styles.list, variant),
     }}
     >
-      <ThemeProvider theme={themes.default.theme}>
-        {themesList.map(([id, { name, theme }]: [string, ThemeFormat]): ReactNode => (
-          <ThemeProvider theme={theme}>
-            <div
-              key={id}
+      {themesList.map(([id, { name, theme }]: [string, ThemeFormat]): ReactNode => (
+        <ThemeProvider theme={theme}>
+          <div
+            key={id}
+            style={{
+              ...Styles.item.base,
+              // ...getVariant(Styles.item, variant),
+            }}
+          >
+            <Typography
+              variant="h2"
+              color="primary"
               style={{
-                ...Styles.item.base,
-                // ...getVariant(Styles.item, variant),
+                ...Styles.title.base,
               }}
             >
-              <Typography
-                variant="h2"
-                color="primary"
-                style={{
-                  ...Styles.title.base,
-                }}
-              >
-                {`${name} Theme`}
-              </Typography>
-              {cloneElement(children)}
-            </div>
-          </ThemeProvider>
-        ))}
-      </ThemeProvider>
+              {`${name} Theme`}
+            </Typography>
+            {cloneElement(children)}
+          </div>
+        </ThemeProvider>
+      ))}
     </div>
   );
 };
