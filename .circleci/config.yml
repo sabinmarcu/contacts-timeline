@@ -134,6 +134,10 @@ jobs:
             - v1-dependencies-
 
       - run: 
+          name: "Bootstrap Packages"
+          command: lerna bootstrap
+
+      - run: 
           name: "Deploy Storybook Staging"
           command: cd apps/storybook && yarn deploy:staging
 
