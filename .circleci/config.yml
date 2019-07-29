@@ -97,7 +97,7 @@ jobs:
 
       - run: 
           name: "Deploy DB Staging"
-          command: cd apps/databse && yarn deploy:staging
+          command: cd apps/database && yarn deploy:staging
 
   deploy-staging-admin:
     docker:
@@ -113,10 +113,6 @@ jobs:
             - v1-dependencies-{{ checksum "yarn.lock" }}
             # fallback to using the latest cache if no exact match is found
             - v1-dependencies-
-              
-      - run: 
-          name: "Login to Prisma"
-          command: yarn prisma-login
 
       - run: 
           name: "Deploy Admin Staging"
@@ -136,13 +132,9 @@ jobs:
             - v1-dependencies-{{ checksum "yarn.lock" }}
             # fallback to using the latest cache if no exact match is found
             - v1-dependencies-
-              
-      - run: 
-          name: "Login to Prisma"
-          command: yarn prisma-login
 
       - run: 
-          name: "Deploy Admin Staging"
+          name: "Deploy Storybook Staging"
           command: cd apps/storybook && yarn deploy:staging
 
 workflows: 
