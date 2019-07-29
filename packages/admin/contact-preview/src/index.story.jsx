@@ -6,7 +6,7 @@ import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 
 import { makeContact } from '@ct/generators/src/entities';
-import { StoryThemeShowcase } from '@ct/themes';
+import { StoryThemeShowcase, StoryThemePicker } from '@ct/themes';
 import { Layout, Section } from '@ct/storybook';
 import Preview from './index';
 
@@ -32,24 +32,28 @@ storiesOf('Contact Preview', module)
   ))
   .add('Layouting', () => (
     <Layout>
-      <Section title="Flex Row">
-        <PreviewItem />
-      </Section>
-      <Section title="Grid 2 Columns" variant="col2">
-        <PreviewItem />
-        <PreviewItem />
-        <PreviewItem />
-        <PreviewItem />
-        <PreviewItem />
-        <PreviewItem />
-      </Section>
-      <Section title="Grid 3 Columns" variant="col3">
-        <PreviewItem />
-        <PreviewItem />
-        <PreviewItem />
-        <PreviewItem />
-        <PreviewItem />
-        <PreviewItem />
-      </Section>
+      <StoryThemePicker>
+        <>
+          <Section title="Flex Row">
+            <PreviewItem />
+          </Section>
+          <Section title="Grid 2 Columns" variant="col2">
+            <PreviewItem />
+            <PreviewItem />
+            <PreviewItem />
+            <PreviewItem />
+            <PreviewItem />
+            <PreviewItem />
+          </Section>
+          <Section title="Grid 3 Columns" variant="col3">
+            <PreviewItem />
+            <PreviewItem />
+            <PreviewItem />
+            <PreviewItem />
+            <PreviewItem />
+            <PreviewItem />
+          </Section>
+        </>
+      </StoryThemePicker>
     </Layout>
   ));
