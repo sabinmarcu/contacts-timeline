@@ -7,8 +7,8 @@ import { action } from '@storybook/addon-actions';
 
 import { makeContact } from '@ct/generators/src/entities';
 import { StoryThemeShowcase, StoryThemePicker } from '@ct/themes';
-import { Layout, Section } from '@ct/storybook';
-import Preview from './index';
+import { Layout, LayoutTransparency, Section } from '@ct/storybook';
+import { Preview } from './preview';
 
 const PreviewItem = () => (
   <Preview
@@ -33,7 +33,7 @@ storiesOf('Contact Preview', module)
   .add('Layouting', () => (
     <Layout>
       <StoryThemePicker>
-        <>
+        <LayoutTransparency>
           <Section title="Flex Row">
             <PreviewItem />
           </Section>
@@ -53,7 +53,7 @@ storiesOf('Contact Preview', module)
             <PreviewItem />
             <PreviewItem />
           </Section>
-        </>
+        </LayoutTransparency>
       </StoryThemePicker>
     </Layout>
   ));

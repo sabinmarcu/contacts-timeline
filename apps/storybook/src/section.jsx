@@ -1,7 +1,7 @@
 /* eslint-disable react/require-default-props */
 // @flow
 
-import React, { type Node } from 'react';
+import React, { type Node, useContext } from 'react';
 import {
   ExpansionPanel,
   ExpansionPanelSummary,
@@ -9,6 +9,7 @@ import {
   Typography,
   makeStyles,
 } from '@material-ui/core';
+import { LayoutTransparencyContext } from './layout';
 
 export type VariantsType = 'default' | 'col2' | 'col3';
 export const Variants = ['default', 'col2', 'col3'].reduce(
@@ -41,6 +42,12 @@ const useStyles = makeStyles(theme => ({
   'details-col3': {
     gridTemplateColumns: '1fr 1fr 1fr',
   },
+  transparent: {
+    background: 'transparent',
+  },
+  solid: {
+    background: 'white',
+  },
 }));
 
 const stylesMap = Object.keys(Variants).reduce(
@@ -60,9 +67,10 @@ export type Props = {
 
 export const Section = ({ children, title, variant = 'default' }: Props): Node => {
   const styles = useStyles();
+  const isTransparent = useContext(LayoutTransparencyContext);
   return (
-    <ExpansionPanel>
-      <ExpansionPanelSummary>
+    <ExpansionPanel className={isTransparent ? styles.transparent : styles.solid}>
+      <ExpansionPanelSummary className={!isTransparent ? styles.transparent : styles.solid}>
         <Typography className={styles.heading}>{title}</Typography>
       </ExpansionPanelSummary>
       <ExpansionPanelDetails className={[styles.details, styles[stylesMap[variant]]].join(' ')}>

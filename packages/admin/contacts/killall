@@ -1,0 +1,8 @@
+18756   ??  Ss     0:21.91 /Users/sabinm/Projects/eqx-porting-clone/node_modules/flow-bin/flow-osx-v0.84.0/flow monitor for /Users/sabinm/Projects/eqx-porting-clone
+18757   ??  S      0:13.76 /Users/sabinm/Projects/eqx-porting-clone/node_modules/flow-bin/flow-osx-v0.84.0/flow file watching process for server 18756
+18758   ??  S      0:22.82 /Users/sabinm/Projects/eqx-porting-clone/node_modules/flow-bin/flow-osx-v0.84.0/flow main_1
+18759   ??  S      0:00.22 /Users/sabinm/Projects/eqx-porting-clone/node_modules/flow-bin/flow-osx-v0.84.0/flow worker process 1/4 for server 18758
+18760   ??  S      0:00.22 /Users/sabinm/Projects/eqx-porting-clone/node_modules/flow-bin/flow-osx-v0.84.0/flow worker process 2/4 for server 18758
+18761   ??  S      0:00.24 /Users/sabinm/Projects/eqx-porting-clone/node_modules/flow-bin/flow-osx-v0.84.0/flow worker process 3/4 for server 18758
+18762   ??  S      0:00.28 /Users/sabinm/Projects/eqx-porting-clone/node_modules/flow-bin/flow-osx-v0.84.0/flow worker process 4/4 for server 18758
+99975 s001  R+     0:00.00 grep --color=auto --exclude-dir=.bzr --exclude-dir=CVS --exclude-dir=.git --exclude-dir=.hg --exclude-dir=.svn flow

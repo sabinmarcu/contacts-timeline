@@ -2,7 +2,6 @@
 
 import React, {
   useMemo,
-  cloneElement,
   type Node as ReactNode,
 } from 'react';
 
@@ -115,7 +114,7 @@ const ThemeShowcase = ({
             >
               {`${name} Theme`}
             </Typography>
-            {cloneElement(children)}
+            {children}
           </div>
         </ThemeProvider>
       ))}

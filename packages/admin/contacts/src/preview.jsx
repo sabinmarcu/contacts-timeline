@@ -25,7 +25,7 @@ export type Props = {
   onRemove?: Function,
 };
 
-const Navigation = ({
+export const Preview = ({
   contact: {
     name,
     avatar,
@@ -73,4 +73,4 @@ const Navigation = ({
   </Card>
 );
 
-export default Navigation;
+export default Preview;

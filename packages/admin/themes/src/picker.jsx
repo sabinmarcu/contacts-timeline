@@ -5,7 +5,6 @@ import React, {
   useState,
   useMemo,
   useCallback,
-  cloneElement,
   type Node as ReactNode,
 } from 'react';
 import {
@@ -51,7 +50,7 @@ const ThemePicker = ({
           ))}
         </Select>
       </FormControl>
-      {cloneElement(children)}
+      {children}
     </ThemeProvider>
   );
 };
