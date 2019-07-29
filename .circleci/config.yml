@@ -76,7 +76,7 @@ jobs:
           name: "Deploy Production"
           command: yarn deploy
 
-  deploy-staging:
+  deploy-staging-db:
     docker:
       # specify the version you desire here
       - image: circleci/node:11.15
@@ -96,8 +96,54 @@ jobs:
           command: yarn prisma-login
 
       - run: 
-          name: "Deploy Staging"
-          command: yarn deploy:staging
+          name: "Deploy DB Staging"
+          command: cd apps/databse && yarn deploy:staging
+
+  deploy-staging-admin:
+    docker:
+      # specify the version you desire here
+      - image: circleci/node:11.15
+    working_directory: ~/repo
+    steps:
+      - checkout
+
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "yarn.lock" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-dependencies-
+              
+      - run: 
+          name: "Login to Prisma"
+          command: yarn prisma-login
+
+      - run: 
+          name: "Deploy Admin Staging"
+          command: cd apps/admin && yarn deploy:staging
+
+  deploy-staging-storybook:
+    docker:
+      # specify the version you desire here
+      - image: circleci/node:11.15
+    working_directory: ~/repo
+    steps:
+      - checkout
+
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "yarn.lock" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-dependencies-
+              
+      - run: 
+          name: "Login to Prisma"
+          command: yarn prisma-login
+
+      - run: 
+          name: "Deploy Admin Staging"
+          command: cd apps/storybook && yarn deploy:staging
 
 workflows: 
   version: 2
@@ -114,7 +160,21 @@ workflows:
             branches:
               only:
                 - master
-      - deploy-staging:
+      - deploy-staging-db:
+          requires: 
+            - test 
+          filters:
+            branches:
+              only:
+                - develop
+      - deploy-staging-admin:
+          requires: 
+            - test 
+          filters:
+            branches:
+              only:
+                - develop
+      - deploy-staging-storybook:
           requires: 
             - test 
           filters:
