@@ -135,7 +135,7 @@ jobs:
 
       - run: 
           name: "Bootstrap Packages"
-          command: lerna bootstrap
+          command: yarn bootstrap
 
       - run: 
           name: "Deploy Storybook Staging"
