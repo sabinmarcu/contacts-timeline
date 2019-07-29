@@ -14,10 +14,10 @@
   "scripts": {
     "start": "start-storybook -p 8000 -c .",
     "build": "build-storybook -o build -c .",
-    "deploy": "export NODE_ENV=production && dotenv-load yarn build --ci --quiet && dotenv-load netlify deploy --dir build --prod",
-    "deploy:stage": "export NODE_ENV=production && dotenv-load yarn build --ci --quiet && dotenv-load netlify deploy --dir build",
-    "deploy:staging": "export NODE_ENV=staging && dotenv-load yarn build --ci --quiet && dotenv-load netlify deploy --dir build --prod",
-    "deploy:staging:stage": "export NODE_ENV=staging && dotenv-load yarn build --ci --quiet && dotenv-load netlify deploy --dir build"
+    "deploy": "export NODE_ENV=production && dotenv-load yarn build --quiet && dotenv-load netlify deploy --dir build --prod",
+    "deploy:stage": "export NODE_ENV=production && dotenv-load yarn build --quiet && dotenv-load netlify deploy --dir build",
+    "deploy:staging": "export NODE_ENV=staging && dotenv-load yarn build --quiet && dotenv-load netlify deploy --dir build --prod",
+    "deploy:staging:stage": "export NODE_ENV=staging && dotenv-load yarn build --quiet && dotenv-load netlify deploy --dir build"
   },
   "main": "src/index.jsx"
 }
