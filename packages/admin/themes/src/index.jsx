@@ -13,14 +13,14 @@ export const ThemePicker = picker;
 export const Showcase = showcase;
 export const themes = themesImport;
 
-export const StoryThemePicker = (props: Object) => (
-  <ThemePicker themes={themes} {...props} />
+export const StoryThemePicker = ({ children, ...rest }: Object) => console.log(children, rest) || (
+  <ThemePicker themes={themes} {...rest}>{children}</ThemePicker>
 );
 
 export const StoryThemeShowcase = (
-  props: $Diff<ShowcaseProps, { themes: { [key: string]: ThemeType } }>,
+  { children, ...rest }: $Diff<ShowcaseProps, { themes: { [key: string]: ThemeType } }>,
 ) => (
-  <Showcase themes={themes} {...props} />
+  <Showcase themes={themes} {...rest}>{children}</Showcase>
 );
 
 export default StoryThemePicker;

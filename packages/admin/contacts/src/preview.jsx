@@ -1,7 +1,7 @@
 // @flow
 /* eslint-disable react/require-default-props */
 
-import React from 'react';
+import React, { forwardRef } from 'react';
 import {
   Card,
   CardHeader,
@@ -25,7 +25,7 @@ export type Props = {
   onRemove?: Function,
 };
 
-const Navigation = ({
+export const Preview = forwardRef(({
   contact: {
     name,
     avatar,
@@ -38,8 +38,8 @@ const Navigation = ({
   },
   onEdit,
   onRemove,
-}: Props) => (
-  <Card className={styles.card}>
+}: Props, ref: Ref) => (
+  <Card className={styles.card} ref={ref}>
     <CardHeader
       title={name}
       subheader={`@${username} | #${phone}`}
@@ -49,28 +49,30 @@ const Navigation = ({
       image={cover}
       style={coverSize}
     />
-    <CardActions>
-      {onEdit && (
+    {(onEdit || onRemove) && (
+      <CardActions>
+        {onEdit && (
         <Button
           variant="contained"
           color="primary"
           onClick={onEdit}
         >
-          Edit
-        </Button>
-      )}
-      {onRemove
-        && (
-        <Button
-          variant="outlined"
-          color="secondary"
-          onClick={onRemove}
-        >
-          Remove
+            Edit
         </Button>
         )}
-    </CardActions>
+        {onRemove
+          && (
+          <Button
+            variant="outlined"
+            color="secondary"
+            onClick={onRemove}
+          >
+            Remove
+          </Button>
+          )}
+      </CardActions>
+    )}
   </Card>
-);
+));
 
-export default Navigation;
+export default Preview;
