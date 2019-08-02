@@ -3,10 +3,12 @@
 
 import React, {
   type Node,
+  type Ref,
   useState,
   useEffect,
   useCallback,
   useMemo,
+  forwardRef,
 } from 'react';
 import {
   Card,
@@ -15,7 +17,6 @@ import {
   CardActions,
   FormControl,
   InputLabel,
-  TextField,
   Input,
   FormHelperText,
   Button,
@@ -40,6 +41,8 @@ type UseFieldReturnType<T> = {
   isDirty: boolean,
   error: FieldErrorType,
   setValue: FieldSetterType,
+  setRawValue: T => void,
+  setRawDirty: boolean => void,
 };
 
 const useField = <T>({
@@ -85,6 +88,8 @@ const useField = <T>({
       isDirty,
       error,
       setValue: handler,
+      setRawValue: setInputValue,
+      setRawDirty: setIsDirty,
       label,
     }),
     [
@@ -94,7 +99,8 @@ const useField = <T>({
       stringValue,
       isDirty,
       error,
-      setValue,
+      setInputValue,
+      setIsDirty,
       handler,
       label,
     ],
@@ -106,7 +112,8 @@ type UseFormPropType<T: Object> = {
   initialValues: T,
 };
 
-type UseFormReturnType<T> = $ObjMap<T, <V>(V) => UseFieldReturnType<V>>;
+type UseFormReturnType<T> = $ObjMap<T, <V>(V) => UseFieldReturnType<V>>
+  & {isDirty: boolean, isValid: boolean, resetData: Function};
 
 type EditContact = $Diff<Contact, {id: ID_Output}>;
 
@@ -162,7 +169,15 @@ const useForm = ({
 
   const isDirty = useMemo(
     () => [fields.name, fields.username, fields.avatar, fields.cover, fields.phone]
-      .reduce((prev, field) => prev && field.isDirty, true),
+      .reduce((prev, field) => prev || field.isDirty, true),
+    [fields.name, fields.username, fields.avatar, fields.cover, fields.phone],
+  );
+
+  const resetData = useCallback(
+    () => ['name', 'username', 'avatar', 'cover', 'phone'].forEach((key: string): void => {
+      fields[key].setRawValue(initialValues[key]);
+      fields[key].setRawDirty(false);
+    }),
     [fields.name, fields.username, fields.avatar, fields.cover, fields.phone],
   );
 
@@ -171,6 +186,7 @@ const useForm = ({
       ...fields,
       isValid,
       isDirty,
+      resetData,
     }),
     [
       fields.name,
@@ -180,6 +196,7 @@ const useForm = ({
       fields.phone,
       isValid,
       isDirty,
+      resetData,
     ],
   );
   return returnObject;
@@ -188,18 +205,27 @@ const useForm = ({
 export type Props = {
   contact: Contact | EditContact,
   onUpdate?: Function,
+  onSave?: Function,
+  onCancel?: Function,
 };
 
-export const Editor = ({ contact, onUpdate }: Props): Node => {
-  const fields = useForm({
+export const Editor = forwardRef(({
+  contact,
+  onUpdate,
+  onSave,
+  onCancel,
+}: Props, ref: Ref): Node => {
+  const { resetData, isDirty, isValid, ...fields } = useForm({ // eslint-disable-line
     initialValues: contact,
   });
   useEffect(
-    () => onUpdate && onUpdate(Object.keys(validatorsSet).reduce((prev, key) => ({ ...prev, [key]: fields[key].value }), {})),
+    () => onUpdate && onUpdate(Object
+      .keys(validatorsSet)
+      .reduce((prev, key) => ({ ...prev, [key]: fields[key].value }), {})),
     [fields.name, fields.username, fields.phone, fields.avatar, fields.cover, onUpdate],
   );
   return (
-    <Card>
+    <Card ref={ref}>
       <CardHeader title={`${contact && contact.id ? 'Edit' : 'Create'} Contact`} />
       <CardContent>
         {Object.keys(validatorsSet).map(key => (
@@ -211,12 +237,21 @@ export const Editor = ({ contact, onUpdate }: Props): Node => {
               value={fields[key].inputValue}
               onChange={fields[key].setValue}
             />
-            {fields[key].isDirty && fields[key].error && <FormHelperText>{fields[key].error}</FormHelperText>}
+            {fields[key].isDirty && fields[key].error
+              && <FormHelperText>{fields[key].error}</FormHelperText>
+            }
           </FormControl>
         ))}
       </CardContent>
+      {onSave && (
+      <CardActions>
+        <Button variant="contained" color="primary" onClick={onSave} disabled={!isValid}>Save</Button>
+        {onCancel && <Button variant="contained" color="secondary" onClick={onCancel}>Cancel</Button>}
+        <Button variant="outlined" color="secondary" onClick={resetData} disabled={!isDirty}>Reset</Button>
+      </CardActions>
+      )}
     </Card>
   );
-};
+});
 
 export default Editor;

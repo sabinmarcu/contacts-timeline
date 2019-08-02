@@ -1,0 +1,29 @@
+0 silly argv { _: [ 'run' ],
+0 silly argv   parallel: true,
+0 silly argv   lernaVersion: '3.15.0',
+0 silly argv   '$0':
+0 silly argv    '/Users/sabinm/Projects/conversation-timeline/node_modules/.bin/lerna',
+0 silly argv   script: 'start' }
+1 notice cli v3.15.0
+2 verbose rootPath /Users/sabinm/Projects/conversation-timeline
+3 info versioning independent
+4 info Executing command in 3 packages: "yarn run start"
+5 silly npmRunScript.stream [ 'start', [], '@ct/admin' ]
+6 silly getExecOpts /Users/sabinm/Projects/conversation-timeline/apps/admin undefined
+7 silly npmRunScript.stream [ 'start', [], '@ct/database' ]
+8 silly getExecOpts /Users/sabinm/Projects/conversation-timeline/apps/database undefined
+9 silly npmRunScript.stream [ 'start', [], '@ct/storybook' ]
+10 silly getExecOpts /Users/sabinm/Projects/conversation-timeline/apps/storybook undefined
+11 error Error: Command failed: yarn run start
+11 error
+11 error $ react-app-rewired start
+11 error Starting the development server...
+11 error
+11 error Failed to compile.
+11 error
+11 error /Users/sabinm/Projects/conversation-timeline/node_modules/style-loader/lib/urls.js
+11 error ReferenceError: Unknown option: .cacheCompression. Check out https://babeljs.io/docs/en/babel-core/#options for more information about options.
+11 error     at Array.forEach (<anonymous>)
+11 error
+11 error     at makeError (/Users/sabinm/Projects/conversation-timeline/node_modules/execa/index.js:174:9)
+11 error     at Promise.all.then.arr (/Users/sabinm/Projects/conversation-timeline/node_modules/execa/index.js:278:16)
