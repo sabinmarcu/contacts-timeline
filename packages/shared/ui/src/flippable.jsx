@@ -1,7 +1,7 @@
 // @flow
 
 import React, {
-  type Node,
+  type Element,
   type Ref,
   useState,
   useMemo,
@@ -47,15 +47,16 @@ export type SizeType = {
 };
 
 type SideProps = {
-  children: Node,
-  style: ?SizeType,
-  active: Boolean,
+  children: Element<*>,
+  style: ?Object,
+  active: boolean,
 }
-export const Side = forwardRef(({
+
+const SideComponent = ({
   children,
   style,
   active,
-}: SideProps, ref: Ref) => (
+}: SideProps, ref: Ref<*>) => (
   <div
     style={{
       ...style,
@@ -69,22 +70,27 @@ export const Side = forwardRef(({
   >
     {cloneElement(children, { ref })}
   </div>
-));
+);
+export const Side = forwardRef<
+  SideProps,
+  typeof SideComponent,
+>(SideComponent);
 
 export type Props = {
-  side: SideTypeValues,
-  frontFace: Node,
-  backFace: Node,
-  children: ?Node,
-  naked: ?boolean,
-  simple: ?boolean,
-  style: ?Object,
-  autoFrontFace: ?boolean,
-  autoBackFace: ?boolean,
-  autoFaces: ?boolean,
+  side?: SideTypeValues,
+  frontFace: Element<*>,
+  backFace: Element<*>,
+  children?: Element<*>,
+  naked?: boolean,
+  simple?: boolean,
+  style?: Object,
+  autoFrontFace?: boolean,
+  autoBackFace?: boolean,
+  autoFaces?: boolean,
 }
 
-export const Flippable = forwardRef(({
+type FlipRefType = { current: ?FlipContextType };
+export const FlippableComponent = ({
   side = Sides.front,
   frontFace,
   backFace,
@@ -95,7 +101,7 @@ export const Flippable = forwardRef(({
   autoFrontFace,
   autoBackFace,
   autoFaces,
-}: Props, ref: Ref) => {
+}: Props, ref: FlipRefType) => {
   const [sideState, setSide] = useState(side);
   const toggleSide = useCallback(
     () => setSide(sideValue => (sideValue === Sides.front ? Sides.back : Sides.front)),
@@ -112,7 +118,9 @@ export const Flippable = forwardRef(({
     [setBackSize],
   );
   const currentSize = useMemo(
-    () => (sideState === Sides.front && frontSize) || (sideState === Sides.back && backSize),
+    () => (sideState === Sides.front && frontSize)
+      || (sideState === Sides.back && backSize)
+      || frontSize,
     [frontSize, backSize, sideState],
   );
   const ParentRender = useMemo(
@@ -129,43 +137,51 @@ export const Flippable = forwardRef(({
   );
   return (
     <FlipContext.Provider value={componentInterface}>
-      <ParentRender
-        style={{
-          ...currentSize,
-          transition: 'all .5s ease-out',
-          transform: !simple && `rotateY(${sideState === Sides.front ? 0 : 180}deg)`,
-          ...style,
-        }}
-      >
-        <Measure bounds onResize={frontSizeSetter}>
-          {({ measureRef }) => (
-            <Side
-              ref={measureRef}
-              style={!(autoFaces || autoFrontFace) && frontSize}
-              active={sideState === Sides.front}
-            >
-              {frontFace}
-            </Side>
-          )}
-        </Measure>
-        <Measure bounds onResize={backSizeSetter}>
-          {({ measureRef }) => (
-            <Side
-              ref={measureRef}
-              style={{
-                ...(autoFaces || autoBackFace ? {} : backSize),
-                transform: !simple && `rotateY(${sideState === Sides.front ? 0 : -180}deg)`,
-              }}
-              active={sideState === Sides.back}
-            >
-              {backFace}
-            </Side>
-          )}
-        </Measure>
-      </ParentRender>
-      {children}
+      <>
+        <ParentRender
+          style={{
+            ...currentSize,
+            transition: 'all .5s ease-out',
+            transform: !simple ? `rotateY(${sideState === Sides.front ? 0 : 180}deg)` : null,
+            ...style,
+          }}
+        >
+          <Measure bounds onResize={frontSizeSetter}>
+            {({ measureRef }) => (
+              <Side
+                ref={measureRef}
+                style={!(autoFaces || autoFrontFace) && frontSize}
+                active={sideState === Sides.front}
+              >
+                {frontFace}
+              </Side>
+            )}
+          </Measure>
+          <Measure bounds onResize={backSizeSetter}>
+            {({ measureRef }) => (
+              <Side
+                ref={measureRef}
+                style={{
+                  ...(autoFaces || autoBackFace ? {} : backSize),
+                  transform: !simple && `rotateY(${sideState === Sides.front ? 0 : -180}deg)`,
+                }}
+                active={sideState === Sides.back}
+              >
+                {backFace}
+              </Side>
+            )}
+          </Measure>
+        </ParentRender>
+        {children}
+      </>
     </FlipContext.Provider>
   );
-});
+};
+
+export const Flippable = forwardRef<
+  Props,
+  typeof FlippableComponent
+  // $FlowFixMe
+>(FlippableComponent);
 
 export default Flippable;

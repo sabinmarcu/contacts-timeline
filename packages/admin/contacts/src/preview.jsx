@@ -1,7 +1,10 @@
 // @flow
 /* eslint-disable react/require-default-props */
 
-import React, { forwardRef } from 'react';
+import React, {
+  forwardRef,
+  type Ref,
+} from 'react';
 import {
   Card,
   CardHeader,
@@ -25,7 +28,7 @@ export type Props = {
   onRemove?: Function,
 };
 
-export const Preview = forwardRef(({
+const PreviewComponent = ({
   contact: {
     name,
     avatar,
@@ -38,7 +41,7 @@ export const Preview = forwardRef(({
   },
   onEdit,
   onRemove,
-}: Props, ref: Ref) => (
+}: Props, ref: Ref<*>) => (
   <Card className={styles.card} ref={ref}>
     <CardHeader
       title={name}
@@ -50,29 +53,34 @@ export const Preview = forwardRef(({
       style={coverSize}
     />
     {(onEdit || onRemove) && (
-      <CardActions>
-        {onEdit && (
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={onEdit}
-        >
-            Edit
-        </Button>
-        )}
-        {onRemove
-          && (
-          <Button
-            variant="outlined"
-            color="secondary"
-            onClick={onRemove}
-          >
-            Remove
-          </Button>
-          )}
-      </CardActions>
+    <CardActions>
+      {onEdit && (
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={onEdit}
+      >
+              Edit
+      </Button>
+      )}
+      {onRemove
+            && (
+              <Button
+                variant="outlined"
+                color="secondary"
+                onClick={onRemove}
+              >
+                Remove
+              </Button>
+            )}
+    </CardActions>
     )}
   </Card>
-));
+);
+
+export const Preview = forwardRef<
+  Props,
+  typeof PreviewComponent,
+>(PreviewComponent);
 
 export default Preview;

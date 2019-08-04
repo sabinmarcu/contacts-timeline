@@ -209,12 +209,13 @@ export type Props = {
   onCancel?: Function,
 };
 
-export const Editor = forwardRef(({
+const EditorComponent = ({
   contact,
   onUpdate,
   onSave,
   onCancel,
-}: Props, ref: Ref): Node => {
+}: Props, ref: Ref<*>): Node => {
+  // $FlowFixMe
   const { resetData, isDirty, isValid, ...fields } = useForm({ // eslint-disable-line
     initialValues: contact,
   });
@@ -252,6 +253,10 @@ export const Editor = forwardRef(({
       )}
     </Card>
   );
-});
+};
+export const Editor = forwardRef<
+  Props,
+  typeof EditorComponent
+>(EditorComponent);
 
 export default Editor;

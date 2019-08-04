@@ -95,6 +95,7 @@ const FlippableEditor = (props) => {
   return (
     <StoryThemePicker>
       <Flippable
+        // $FlowFixMe
         ref={ref}
         autoFrontFace
         autoBackFace
