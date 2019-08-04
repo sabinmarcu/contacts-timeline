@@ -3,4 +3,5 @@
     "javascript.validate.enable": false,
     "typescript.format.enable": false,
     "html.autoClosingTags": false,
+    "files.eol": "\n"
 }
