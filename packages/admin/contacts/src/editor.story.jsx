@@ -68,9 +68,8 @@ const ToggleEditor = () => {
 
 const FlippableEditor = (props) => {
   const ref = useRef();
-  console.log(ref.current && ref.current.setter);
   const setSide = useMemo(
-    () => ref.current && ref.current.setter,
+    () => (ref.current ? ref.current.setter : () => {}),
     [ref.current],
   );
   const [state, setState] = useState(makeContact());

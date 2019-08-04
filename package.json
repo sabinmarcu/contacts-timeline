@@ -43,7 +43,8 @@
     "apps": "apps/*/src"
   },
   "scripts": {
-    "start": "lerna run start --parallel",
+    "start": "cd packages/utils/docker && docker-compose up",
+    "start:local": "lerna run start --parallel",
     "lint": "eslint --ext js,jsx apps",
     "test": "lerna run test --parallel",
     "deploy": "lerna run deploy",
