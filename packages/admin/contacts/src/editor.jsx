@@ -240,9 +240,9 @@ const EditorComponent = ({
       <CardContent className={styles.media}>
         {Object.keys(validatorsSet).map(key => (
           <FormControl error={fields[key].isDirty && !fields[key].isValid} fullWidth>
-            <InputLabel>Avatar: </InputLabel>
+            <InputLabel>{fields[key].label}: </InputLabel>
             <Input
-              placeholder="Avatar"
+              placeholder={`Your ${fields[key].label}`}
               fullWidth
               value={fields[key].inputValue}
               onChange={fields[key].setValue}
