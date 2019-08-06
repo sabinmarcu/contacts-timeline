@@ -3,5 +3,7 @@ query Contacts {
     name
     username
     phone
+    avatar
+    cover
   }
 }
