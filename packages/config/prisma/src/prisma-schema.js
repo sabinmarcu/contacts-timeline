@@ -23,9 +23,9 @@ type Contact {
   id: ID!
   username: String!
   phone: String!
-  name: String
-  avatar: String
-  cover: String
+  name: String!
+  avatar: String!
+  cover: String!
 }
 
 type ContactConnection {
@@ -38,9 +38,9 @@ input ContactCreateInput {
   id: ID
   username: String!
   phone: String!
-  name: String
-  avatar: String
-  cover: String
+  name: String!
+  avatar: String!
+  cover: String!
 }
 
 input ContactCreateOneInput {
@@ -72,9 +72,9 @@ type ContactPreviousValues {
   id: ID!
   username: String!
   phone: String!
-  name: String
-  avatar: String
-  cover: String
+  name: String!
+  avatar: String!
+  cover: String!
 }
 
 type ContactSubscriptionPayload {

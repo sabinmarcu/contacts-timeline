@@ -2,3 +2,4 @@ node_modules
 *.log
 .env
 !apps/**/.env
+**/style.linaria.css

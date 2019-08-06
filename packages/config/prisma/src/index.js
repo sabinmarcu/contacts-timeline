@@ -437,9 +437,9 @@ export type ContactCreateInput = {
   id?: ID_Input,
   username: String,
   phone: String,
-  name?: String,
-  avatar?: String,
-  cover?: String
+  name: String,
+  avatar: String,
+  cover: String
 };
 
 export type ContactUpdateInput = {
@@ -1080,9 +1080,9 @@ export interface ContactPreviousValues {
   id: ID_Output;
   username: String;
   phone: String;
-  name?: String;
-  avatar?: String;
-  cover?: String;
+  name: String;
+  avatar: String;
+  cover: String;
 }
 
 export interface ContactPreviousValuesPromise

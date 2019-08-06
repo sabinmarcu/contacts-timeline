@@ -2,9 +2,9 @@ type Contact {
   id: ID! @id
   username: String! @unique
   phone: String! @unique
-  name: String 
-  avatar: String
-  cover: String
+  name: String!
+  avatar: String!
+  cover: String!
 }
 
 type Message {
