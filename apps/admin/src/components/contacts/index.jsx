@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react';
-import { useSubscription, useQuery } from 'react-apollo-hooks';
+import { useSubscription, useQuery } from '@apollo/react-hooks';
 import gql from 'graphql-tag';
 
 import Contact from '../contact';
@@ -33,9 +33,8 @@ const Contacts = gql`
 
 const ContactsSubscription = gql`
   subscription ContactsSubscription {
-    contact(
-      where: { mutation_in: UPDATED }
-    ) {
+    contact {
+      mutation
       node {
         id
         name
@@ -50,7 +49,7 @@ const ContactsSubscription = gql`
 
 export const ContactsList = () => {
   const { data, error, loading } = useQuery(Contacts);
-  useSubscription(ContactsSubscription);
+  useSubscription(ContactsSubscription, { shouldResubscribe: true });
   if (loading) {
     return (
       <LoadingWrapper>

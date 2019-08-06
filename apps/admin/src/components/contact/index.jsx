@@ -5,7 +5,7 @@ import {
   Flippable, FlipContext, useFlippableProvider,
 } from '@ct/ui';
 import { Preview, Editor } from '@ct/contacts';
-import { useMutation } from 'react-apollo-hooks';
+import { useMutation } from '@apollo/react-hooks';
 import gql from 'graphql-tag';
 
 const Mutate = gql`
@@ -33,6 +33,18 @@ const Mutate = gql`
       name 
       avatar 
       cover 
+    }
+  }
+`;
+
+const Remove = gql`
+  mutation RemoveContact(
+    $id: ID!
+  ) {
+    removeContact(
+      where: { id: $id }
+    ) {
+      id
     }
   }
 `;

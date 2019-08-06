@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@apollo/react-hooks": "^3.0.0",
     "@ct/contacts": "^0.1.0",
     "@ct/layout": "^0.1.0",
     "@ct/ui": "^0.1.0",
@@ -14,14 +15,15 @@
     "apollo-link-http": "^1.5.15",
     "apollo-link-ws": "^1.0.18",
     "apollo-utilities": "^1.3.2",
+    "env-cmd": "^9.0.3",
     "graphql-tag": "^2.10.1",
     "linaria": "^1.3.1",
     "mdi-material-ui": "^6.1.0",
     "react": "^16.8.6",
     "react-apollo": "^2.5.8",
-    "react-apollo-hooks": "^0.5.0",
     "react-dom": "^16.8.6",
     "react-scripts": "3.0.1",
+    "rimraf": "^2.6.3",
     "subscriptions-transport-ws": "^0.9.16",
     "typeface-roboto": "^0.0.54"
   },
@@ -29,10 +31,11 @@
     "start": "react-app-rewired start",
     "build": "react-app-rewired build",
     "eject": "react-scripts eject",
-    "deploy": "export NODE_ENV=production && dotenv-load yarn build && dotenv-load netlify deploy --dir build --prod",
-    "deploy:stage": "export NODE_ENV=production && dotenv-load yarn build && dotenv-load netlify deploy --dir build",
-    "deploy:staging": "export NODE_ENV=staging && dotenv-load yarn build && dotenv-load netlify deploy --dir build --prod",
-    "deploy:staging:stage": "export NODE_ENV=staging && dotenv-load yarn build && dotenv-load netlify deploy --dir build"
+    "clean": "rimraf build",
+    "deploy": "yarn clean && env-cmd -f .env.production yarn build && env-cmd -f .env.production netlify deploy --dir build --prod",
+    "deploy:stage": "yarn clean && env-cmd -f .env.production yarn build && env-cmd -f .env.production netlify deploy --dir build",
+    "deploy:staging": "yarn clean && env-cmd -f .env.staging yarn build && env-cmd -f .env.staging netlify deploy --dir build --prod",
+    "deploy:staging:stage": "yarn clean && env-cmd -f .env.staging yarn build && env-cmd -f .env.staging netlify deploy --dir build"
   },
   "browserslist": {
     "production": [

@@ -9,9 +9,8 @@ import { InMemoryCache } from 'apollo-cache-inmemory';
 import { SubscriptionClient } from 'subscriptions-transport-ws';
 
 console.log('Connecting to prisma at', process.env.REACT_APP_PRISMA_URL);
-const uri = `://${process.env.REACT_APP_PRISMA_URL || 'localhost:4466'}`;
-const gqlUri = `http${uri}`;
-const wsUri = `ws${uri}`;
+const gqlUri = process.env.REACT_APP_PRISMA_URL || 'http://localhost:4466';
+const wsUri = gqlUri.replace(/http/, 'ws');
 
 const httpLink = new HttpLink({ uri: gqlUri });
 const wsClient = new SubscriptionClient(wsUri, { reconnect: true });
@@ -32,13 +31,14 @@ const link = ApolloLink.from([terminatingLink]);
 
 const makeDataId = (({ __typename, id }) => (id ? `${__typename}:${id}` : null));
 const cache = new InMemoryCache({
-  dataIdFromObject: ({ __typename, id, node }) => {
+  dataIdFromObject: ({ __typename, id, mutation, node, ...props }) => {
     let returnId = null;
     if (__typename.includes('Subscription')) {
       returnId = makeDataId(node);
     } else {
       returnId = makeDataId({ __typename, id });
     }
+    console.log(returnId, {__typename, mutation, id, node, props});
     return returnId;
   },
 });

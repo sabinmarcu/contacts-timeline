@@ -231,7 +231,12 @@ const EditorComponent = ({
     [rawData, onUpdate],
   );
   const saveHandler = useCallback(
-    () => onSave && onSave(rawData),
+    () => {
+      if (onSave) {
+        onSave(rawData);
+        resetData();
+      }   
+    },
     [onSave, rawData],
   );
   return (

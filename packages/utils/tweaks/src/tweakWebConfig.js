@@ -2,6 +2,9 @@
 
 const { resolve } = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const dotenv = require('dotenv');
+const path = require('path');
+
 const BabelConfig = require('../../../../.babelrc');
 
 const DEV = process.env.NODE_ENV !== 'production';
@@ -11,6 +14,13 @@ module.exports = (config) => {
   const rules = rulesParent ? rulesParent.oneOf : config.module.rules;
   const babelLoaders = rules.filter(({ test }) => `${test}`.includes('js'));
   babelLoaders.forEach((babelLoader) => {
+    console.log('ENV: ', process.env.NODE_ENV);
+    console.log(
+      'REACT VARS: ',
+      ...Object.keys(process.env)
+        .filter(key => /^REACT_APP/.test(key))
+        .map(key => `\n\tKey: '${key}'\n\tValue: '${process.env[key]}'\n`),
+    );
     const babelLoaderVariables = babelLoader.loader && babelLoader.options
       ? {
         loader: babelLoader.loader,
