@@ -12,8 +12,12 @@ export type { ThemeType as ThemeFormat };
 export const ThemePicker = picker;
 export const Showcase = showcase;
 export const themes = themesImport;
+export const themeNames: string[] = 
+  Object.keys(themesImport);
 
-export const StoryThemePicker = ({ children, ...rest }: Object) => console.log(children, rest) || (
+export type ThemeNamesType = $Keys<typeof themesImport>;
+
+export const StoryThemePicker = ({ children, ...rest }: Object) => (
   <ThemePicker themes={themes} {...rest}>{children}</ThemePicker>
 );
 
