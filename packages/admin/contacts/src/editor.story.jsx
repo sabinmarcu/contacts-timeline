@@ -10,7 +10,7 @@ import { action } from '@storybook/addon-actions';
 import { makeContact } from '@ct/generators/src/entities';
 import { StoryThemeShowcase, StoryThemePicker } from '@ct/themes';
 import { Layout } from '@ct/storybook';
-import { Flippable } from '@ct/ui';
+import { Flippable, FlipContext, useFlippableProvider } from '@ct/ui';
 import { Editor } from './editor';
 import { Preview } from './preview';
 
@@ -67,52 +67,44 @@ const ToggleEditor = () => {
 };
 
 const FlippableEditor = (props) => {
-  const ref = useRef();
-  const setSide = useMemo(
-    () => (ref.current ? ref.current.setter : () => {}),
-    [ref.current],
-  );
+  const context = useFlippableProvider();
   const [state, setState] = useState(makeContact());
   const [inputState, setInputState] = useState(state);
-  const toggleEditing = useCallback(
-    () => { setSide(); },
-    [setSide],
-  );
   const saveState = useCallback(
     () => {
       setState(inputState);
-      toggleEditing();
+      context.setter();
     },
-    [inputState, setState, toggleEditing],
+    [inputState, setState, context],
   );
   const cancelEditing = useCallback(
     () => {
       setInputState(state);
-      toggleEditing();
+      context.setter();
     },
-    [state, setInputState, toggleEditing],
+    [state, setInputState, context],
   );
   return (
-    <StoryThemePicker>
-      <Flippable
-        // $FlowFixMe
-        ref={ref}
-        autoFrontFace
-        autoBackFace
-        frontFace={
-          <Preview contact={state} onEdit={toggleEditing} />
-        }
-        backFace={(
-          <Editor
-            onUpdate={setInputState}
-            onCancel={cancelEditing}
-            onSave={saveState}
-            contact={inputState}
-          />
-        )}
-        {...props}
-      />
-    </StoryThemePicker>
+    <FlipContext.Provider value={context}>
+      <StoryThemePicker>
+        <Flippable
+          autoFrontFace
+          autoBackFace
+          frontFace={
+            <Preview contact={state} onEdit={context.setter} />
+          }
+          backFace={(
+            <Editor
+              onUpdate={setInputState}
+              onCancel={cancelEditing}
+              onSave={saveState}
+              contact={inputState}
+            />
+          )}
+          {...props}
+        />
+      </StoryThemePicker>
+    </FlipContext.Provider>
   );
 };
 

@@ -50,6 +50,7 @@ const PreviewComponent = ({
     />
     <CardMedia
       image={cover}
+      className={styles.media}
       style={coverSize}
     />
     {(onEdit || onRemove) && (
@@ -60,19 +61,19 @@ const PreviewComponent = ({
         color="primary"
         onClick={onEdit}
       >
-              Edit
+        Edit
       </Button>
       )}
       {onRemove
-            && (
-              <Button
-                variant="outlined"
-                color="secondary"
-                onClick={onRemove}
-              >
-                Remove
-              </Button>
-            )}
+        && (
+          <Button
+            variant="outlined"
+            color="secondary"
+            onClick={onRemove}
+          >
+            Remove
+          </Button>
+        )}
     </CardActions>
     )}
   </Card>

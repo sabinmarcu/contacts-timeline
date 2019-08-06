@@ -22,6 +22,7 @@ import {
   Button,
 } from '@material-ui/core';
 import { type Contact, type ID_Output } from '@ct/prisma';
+import styles from './style';
 
 type FieldErrorType = string | null;
 type FieldSetterType = SyntheticInputEvent<HTMLInputElement> => void;
@@ -223,12 +224,12 @@ const EditorComponent = ({
     () => onUpdate && onUpdate(Object
       .keys(validatorsSet)
       .reduce((prev, key) => ({ ...prev, [key]: fields[key].value }), {})),
-    [fields.name, fields.username, fields.phone, fields.avatar, fields.cover, onUpdate],
-  );
-  return (
-    <Card ref={ref}>
+                          [fields.name, fields.username, fields.phone, fields.avatar, fields.cover, onUpdate],
+                        );
+                        return (
+    <Card className={styles.card} ref={ref}>
       <CardHeader title={`${contact && contact.id ? 'Edit' : 'Create'} Contact`} />
-      <CardContent>
+      <CardContent className={styles.media}>
         {Object.keys(validatorsSet).map(key => (
           <FormControl error={fields[key].isDirty && !fields[key].isValid} fullWidth>
             <InputLabel>Avatar: </InputLabel>
