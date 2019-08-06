@@ -4,20 +4,20 @@ import React, {
   useState,
   useMemo,
   useCallback,
+  useEffect,
   useDebugValue,
   createContext,
   useContext,
   type Element,
 } from 'react';
-import { 
+import {
   themes,
-  themeNames,
   type ThemeFormat,
   type ThemeNamesType,
 } from '@ct/themes';
 
 import {
-  styled
+  styled,
 } from 'linaria/react';
 
 import {
@@ -28,7 +28,6 @@ import {
   Tooltip,
   MenuItem,
   Menu,
-  Typography,
   withTheme,
 } from '@material-ui/core';
 import {
@@ -43,32 +42,38 @@ export type ThemeContextType = {
 }
 
 export const ThemeContext = createContext<ThemeContextType>({});
-export const ThemeProvider = ({ 
-  children, 
-  value
-}: { 
+export const ThemeProvider = ({
+  children,
+  value,
+}: {
   children: Element<*>,
   value: ThemeContextType,
-}) => {
-  return (
-    <ThemeContext.Provider value={value}>
-      <MUIThemeProvider theme={value.theme}>
-        {children}
-      </MUIThemeProvider>
-    </ThemeContext.Provider>
-  );
-};
+}) => (
+  <ThemeContext.Provider value={value}>
+    <MUIThemeProvider theme={value.theme}>
+      {children}
+    </MUIThemeProvider>
+  </ThemeContext.Provider>
+);
 
+export const themeLocalstorageKey = 'app:theme';
 export const useThemeProvider = (
   defaultTheme: ThemeNamesType = 'default',
 ) => {
-  const [activeTheme, setActiveTheme] = useState<ThemeNamesType>(defaultTheme);
+  const [activeTheme, setActiveTheme] = useState<ThemeNamesType>(
+    // $FlowFixMe
+    localStorage.getItem(themeLocalstorageKey) || defaultTheme,
+  );
   const theme: ThemeFormat = useMemo(
     () => themes[activeTheme].theme,
     [activeTheme],
   );
   const themeName: string = useMemo(
     () => themes[activeTheme].name,
+    [activeTheme],
+  );
+  useEffect(
+    () => localStorage.setItem(themeLocalstorageKey, activeTheme),
     [activeTheme],
   );
   useDebugValue(`Active: ${activeTheme}`);
@@ -81,24 +86,26 @@ export const useThemeProvider = (
 };
 
 const StyledIconButton = withTheme(styled(IconButton)`
-  color: ${({ 
+  color: ${({
     color,
     theme:
     {
       palette:
       {
         text,
-        primary: { contrastText }
-      }
-    }
+        primary: { contrastText },
+      },
+    },
   }) => (color && text[color]) || contrastText} !important;
 `);
 
 const themeKeys = Object.keys(themes);
 export const ThemeSwitcher = ({
-  color
+  color,
 }: { color: 'primary' | 'secondary' | 'disabled' | 'hint'}) => {
-  const { theme, themeId, setTheme, themeName } = useContext(ThemeContext);
+  const {
+    themeId, setTheme, themeName,
+  } = useContext(ThemeContext);
   const [anchor, setAnchor] = useState(null);
   const open = useMemo(
     () => !!anchor,
@@ -113,37 +120,37 @@ export const ThemeSwitcher = ({
     [setAnchor],
   );
   const onSave = useCallback(
-    ({ target: { id }}) => {
-      console.log(theme, themeId, setTheme)
-      console.log(id)
+    ({ target: { id } }) => {
       setTheme(id);
       onClose();
     },
     [onClose, setTheme],
   );
-  return <>
-    <Tooltip title={`Active: ${themeName}`}>
-      <StyledIconButton color={color} onClick={onOpen}>
-        <ThemeIcon />
-      </StyledIconButton>
-    </Tooltip>
-    <Menu 
-      onClose={onClose}
-      anchorEl={anchor}
-      open={open}
-    >
-      {themeKeys.map((key: string): Element<*> => (
-        <MenuItem
-          key={key}
-          id={key}
-          selected={key === themeId}
-          onClick={onSave}
-        >
-          {themes[key].name}
-        </MenuItem>
-      ))}
-    </Menu>
-  </>
+  return (
+    <>
+      <Tooltip title={`Active: ${themeName}`}>
+        <StyledIconButton color={color} onClick={onOpen}>
+          <ThemeIcon />
+        </StyledIconButton>
+      </Tooltip>
+      <Menu
+        onClose={onClose}
+        anchorEl={anchor}
+        open={open}
+      >
+        {themeKeys.map((key: string): Element<*> => (
+          <MenuItem
+            key={key}
+            id={key}
+            selected={key === themeId}
+            onClick={onSave}
+          >
+            {themes[key].name}
+          </MenuItem>
+        ))}
+      </Menu>
+    </>
+  );
 };
 
 export default ThemeSwitcher;
