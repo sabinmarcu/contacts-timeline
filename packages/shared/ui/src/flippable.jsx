@@ -7,7 +7,6 @@ import React, {
   useMemo,
   useCallback,
   useLayoutEffect,
-  useImperativeHandle,
   useContext,
   useEffect,
   cloneElement,
@@ -28,19 +27,20 @@ export type SideType = $Keys<typeof Sides>;
 type SideTypeValues = $Values<typeof Sides>;
 
 export type SideTypeValuesSetter = SideTypeValues => void;
+export type SideTypeValueToggler = () => void;
 export type FlipContextType = {
   value: SideTypeValues,
-  setter: ?SideTypeValuesSetter,
+  setter: ?SideTypeValueToggler,
 };
 
 const makeContextValue = (
   value: SideTypeValues,
-  setter: ?SideTypeValuesSetter = null,
+  setter: ?SideTypeValueToggler = null,
 ): FlipContextType => ({
   value,
   setter,
 });
-export const FlipContext = createContext<FlipContextType>(null);
+export const FlipContext = createContext<?FlipContextType>(null);
 
 export type SizeType = {
   width: number,
@@ -51,6 +51,7 @@ type SideProps = {
   children: Element<*>,
   style: ?Object,
   active: boolean,
+  animationDuration: number,
 }
 
 const SideComponent = ({
@@ -72,10 +73,10 @@ const SideComponent = ({
         ...style,
         position: 'absolute',
         transition: 'opacity .5s ease-out',
-        transitionDelay: active ? `.${animationDuration}s` : `0s`,
+        transitionDelay: active ? `.${animationDuration}s` : '0s',
         transitionDuration: active ? `.${animationDuration}s` : `.${animationDuration * 60 / 100}s`,
         opacity: active ? 1 : 0,
-        zIndex: active ? 1 : -1,
+        zIndex,
       }}
     >
       {cloneElement(children, { ref })}
@@ -88,6 +89,7 @@ export const Side = forwardRef<
 >(SideComponent);
 
 export type Props = {
+  // eslint-disable-next-line react/no-unused-prop-types
   side?: SideTypeValues,
   frontFace: Element<*>,
   backFace: Element<*>,
@@ -102,7 +104,7 @@ export type Props = {
   animationDuration?: number,
 }
 
-export const useFlippableProvider = (defaultSide = Sides.front) => {
+export const useFlippableProvider = (defaultSide: SideTypeValues = Sides.front) => {
   const [sideState, setSide] = useState(defaultSide);
   const toggleSide = useCallback(
     () => setSide(sideValue => (sideValue === Sides.front ? Sides.back : Sides.front)),
@@ -113,25 +115,25 @@ export const useFlippableProvider = (defaultSide = Sides.front) => {
     [sideState, toggleSide],
   );
   return context;
-}
+};
 
 export const FlippableWithoutContext = (
   props: Props,
 ) => {
-  const context = useFlippableProvider(props.side);
+  const { side } = props;
+  const context = useFlippableProvider(side);
   return (
     <FlipContext.Provider value={context}>
       <FlippableComponent {...props} />
     </FlipContext.Provider>
-  )
-}
+  );
+};
 
 export const FlippableWithContext = (
   props: Props,
-) => <FlippableComponent {...props} />
+) => <FlippableComponent {...props} />;
 
 export const FlippableComponent = ({
-  side = Sides.front,
   frontFace,
   backFace,
   children,
@@ -142,10 +144,11 @@ export const FlippableComponent = ({
   autoBackFace,
   autoFaces,
   autoSize,
-  animationDuration = .5,
+  animationDuration = 0.5,
 }: Props) => {
   const [init, setInit] = useState(false);
-  const { value: sideState } = useContext(FlipContext);
+  const context = useContext(FlipContext);
+  const { value: sideState } = context || {};
   useLayoutEffect(
     () => { setInit(true); },
     [],
@@ -172,8 +175,8 @@ export const FlippableComponent = ({
     [frontSize, backSize, sideState],
   );
   const ParentRender = useMemo(
-    () => (naked 
-      ? forwardRef((props, ref) => <div {...props} ref={ref} />) 
+    () => (naked
+      ? forwardRef((props, ref) => <div {...props} ref={ref} />)
       : forwardRef((props, ref) => <Paper {...props} ref={ref} />)
     ),
     [naked],
@@ -185,19 +188,17 @@ export const FlippableComponent = ({
       };
       if (autoSize) {
         finalStyles = { ...finalStyles, flex: 1 };
-      } else {
-        if (init) {
-          finalStyles = { ...finalStyles, ...currentSize };
-        }
+      } else if (init) {
+        finalStyles = { ...finalStyles, ...currentSize };
       }
       if (init && !simple) {
         finalStyles = { ...finalStyles, transform: `rotateY(${sideState === Sides.front ? 0 : 180}deg)` };
       }
       finalStyles = { ...finalStyles, ...style };
       return finalStyles;
-    }, 
-    [autoSize, init, simple, currentSize, style]
-  )
+    },
+    [autoSize, init, simple, currentSize, style],
+  );
   const frontSideStyles = useMemo(
     () => {
       if (autoSize) {
@@ -206,18 +207,19 @@ export const FlippableComponent = ({
       if (!(autoFaces || autoFrontFace)) {
         return frontSize;
       }
+      return {};
     },
-    [autoSize, autoFaces, autoFrontFace, frontSize, wrapperSize]
-  )
+    [autoSize, autoFaces, autoFrontFace, frontSize, wrapperSize],
+  );
   const backSideStyles = useMemo(
     () => {
       let finalStyles = {};
       if (autoSize) {
-        finalStyles = { ...finalStyles, flex: 1, display: 'flex',...wrapperSize };
-      } else {
-        if (!(autoFaces || autoBackFace)) {
-          finalStyles = { ... finalStyles, ...backSize };
-        }
+        finalStyles = {
+          ...finalStyles, flex: 1, display: 'flex', ...wrapperSize,
+        };
+      } else if (!(autoFaces || autoBackFace)) {
+        finalStyles = { ...finalStyles, ...backSize };
       }
       if (init && !simple) {
         finalStyles = { ...finalStyles, transform: `rotateY(${sideState === Sides.front ? 0 : -180}deg)` };
@@ -225,13 +227,13 @@ export const FlippableComponent = ({
       return finalStyles;
     },
     [autoSize, autoFaces, autoBackFace, backSize, sideState, init, simple, wrapperSize],
-  )
+  );
   return (
     <>
       <Measure bounds onResize={wrapperSizeSetter}>
-        {({ measureRef }) => (
+        {({ measureRef: parentMeasureRef }) => (
           <ParentRender
-            ref={measureRef}
+            ref={parentMeasureRef}
             style={parentStyles}
           >
             <Measure bounds onResize={frontSizeSetter}>
@@ -264,17 +266,17 @@ export const FlippableComponent = ({
       {children}
     </>
   );
-}
+};
 
 export const Flippable = (props: Props) => {
   const parentContext = useContext(FlipContext);
   const FlippableRender = useMemo(
-    () => parentContext
+    () => (parentContext
       ? FlippableWithContext
-      : FlippableWithoutContext,
+      : FlippableWithoutContext),
     [parentContext],
   );
-  return <FlippableRender {...props} />
+  return <FlippableRender {...props} />;
 };
 
 export default Flippable;
