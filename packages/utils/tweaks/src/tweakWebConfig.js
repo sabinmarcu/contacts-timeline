@@ -2,6 +2,7 @@
 
 const { resolve } = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const BabelConfig = require('../../../../.babelrc');
 
 const DEV = process.env.NODE_ENV !== 'production';
 
@@ -23,6 +24,15 @@ module.exports = (config) => {
       delete babelLoaderVariables.options.cacheCompression;
       delete babelLoaderVariables.options.cacheIdentifier;
     }
+    Object.keys(BabelConfig)
+      .forEach((key) => {
+        if (babelLoader.options[key]) {
+          babelLoader.options[key] = [
+            ...babelLoader.options[key],
+            ...BabelConfig[key],
+          ].filter((it, index, array) => array.indexOf(it) === index);
+        }
+      });
     const linariaLoader = {
       loader: 'linaria/loader',
       options: {
