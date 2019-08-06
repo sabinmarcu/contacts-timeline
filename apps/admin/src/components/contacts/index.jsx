@@ -2,27 +2,29 @@
 
 import React from 'react';
 import { useQuery } from 'react-apollo-hooks';
-import { loader } from 'graphql.macro';
 
 import Contact from '../contact';
 
-import { 
+import {
   Wrapper,
   List,
   LoadingWrapper,
   LoadingProgress,
-  LoadingText
+  LoadingText,
 } from './style';
 
-const ContactsQuery = loader('../../graphql/contacts.graphql');
+// $FlowFixMe
+import ContactsQuery from '../../graphql/contacts.graphql';
 
 export const ContactsList = () => {
   const { data, loading, error } = useQuery(ContactsQuery);
   if (loading) {
-    return <LoadingWrapper>
-      <LoadingProgress></LoadingProgress>
-      <LoadingText>Loading...</LoadingText>
-    </LoadingWrapper>;
+    return (
+      <LoadingWrapper>
+        <LoadingProgress />
+        <LoadingText>Loading...</LoadingText>
+      </LoadingWrapper>
+    );
   }
   if (error) {
     return <div>{error}</div>;

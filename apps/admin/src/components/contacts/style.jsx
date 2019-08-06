@@ -11,14 +11,14 @@ export const Wrapper = styled.section`
   overflow: auto;
 `;
 
-export const List = ({ 
-  amount, 
-  minWidth = 300, 
+export const List = ({
+  amount,
+  minWidth = 300,
   maxWidth = 500,
   height = 300,
   margin = 15,
   children,
-}: { 
+}: {
   amount: number,
   minWidth?: number,
   maxWidth?: number,
@@ -35,14 +35,17 @@ export const List = ({
     },
     [setWidth],
   );
-  return (<Grid 
-    amount={amount}
-    height={height}
-    columns={parseInt(Math.min(width / minWidth, width / maxWidth), 10)}
-  >
-    {children}
-  </Grid>);
-}
+  return (
+    <Grid
+      amount={amount}
+      height={height}
+      margin={margin}
+      columns={parseInt(Math.min(width / minWidth, width / maxWidth), 10)}
+    >
+      {children}
+    </Grid>
+  );
+};
 
 export const Grid = styled.section`
   perspective: 2000px;
@@ -50,17 +53,17 @@ export const Grid = styled.section`
   display: grid;
   grid-template-columns: repeat(${({ columns }) => columns}, 1fr);
   grid-template-rows: repeat(auto-fill, minmax(${({ height }) => height}px, 1fr));
-  grid-gap: 15px;
-  margin: 15px;
+  grid-gap: ${({ margin }) => margin};
+  margin: ${({ margin }) => margin};
   height: ${({ amount, columns, height }) => Math.ceil(amount / columns) * height}px;
   /* display: flex;
   flex-flow: row wrap;
   align-items: space-around;
   justify-content: center; */
-  padding: 7.5px;
+  /* padding: 7.5px;
   & > * {
     margin: 7.5px;
-  }
+  } */
 `;
 
 export const LoadingWrapper = styled.section`
@@ -74,7 +77,7 @@ export const LoadingWrapper = styled.section`
 export const LoadingProgress = styled(CircularProgress)`
   width: 25vmin !important;
   height: 25vmin !important;
-`
+`;
 
 export const LoadingText = styled(Typography)`
   font-size: 10vmin !important;

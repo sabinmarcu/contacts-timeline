@@ -1,10 +1,14 @@
-import React, { useRef, useMemo, useState, useCallback } from 'react';
-import { Flippable, FlipContext, useFlippableProvider, Sides } from '@ct/ui';
+import React, {
+  useState, useCallback,
+} from 'react';
+import {
+  Flippable, FlipContext, useFlippableProvider,
+} from '@ct/ui';
 import { Preview, Editor } from '@ct/contacts';
 
 export const ContactEditor = ({ contact }) => {
   const context = useFlippableProvider();
-  const { value: side, setter: toggleSide } = context;
+  const { setter: toggleSide } = context;
   const [state, setState] = useState(contact);
   const [inputState, setInputState] = useState(state);
   const saveState = useCallback(
