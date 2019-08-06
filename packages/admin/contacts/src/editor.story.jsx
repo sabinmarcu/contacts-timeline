@@ -2,7 +2,7 @@
 /* eslint-disable import/no-extraneous-dependencies */
 
 import React, {
-  useState, useCallback, useRef, useMemo,
+  useState, useCallback,
 } from 'react';
 import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
@@ -70,17 +70,22 @@ const FlippableEditor = (props) => {
   const context = useFlippableProvider();
   const [state, setState] = useState(makeContact());
   const [inputState, setInputState] = useState(state);
+  const { setter } = context || {};
   const saveState = useCallback(
     () => {
       setState(inputState);
-      context.setter();
+      if (setter) {
+        setter();
+      }
     },
     [inputState, setState, context],
   );
   const cancelEditing = useCallback(
     () => {
       setInputState(state);
-      context.setter();
+      if (setter) {
+        setter();
+      }
     },
     [state, setInputState, context],
   );
@@ -91,7 +96,7 @@ const FlippableEditor = (props) => {
           autoFrontFace
           autoBackFace
           frontFace={
-            <Preview contact={state} onEdit={context.setter} />
+            <Preview contact={state} onEdit={setter} />
           }
           backFace={(
             <Editor
