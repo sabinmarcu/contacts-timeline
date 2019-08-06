@@ -1,0 +1,10 @@
+#include "./contact.fragment.gql"
+mutation RemoveContact(
+  $id: ID!
+) {
+  deleteContact(
+    where: { id: $id }
+  ) {
+    id
+  }
+}

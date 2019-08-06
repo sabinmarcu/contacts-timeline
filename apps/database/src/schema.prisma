@@ -5,6 +5,8 @@ type Contact {
   name: String!
   avatar: String!
   cover: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
 type Message {

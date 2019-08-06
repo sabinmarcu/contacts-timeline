@@ -6,53 +6,22 @@ import {
 } from '@ct/ui';
 import { Preview, Editor } from '@ct/contacts';
 import { useMutation } from '@apollo/react-hooks';
-import gql from 'graphql-tag';
+import { 
+  useTheme,
+} from '@material-ui/styles';
+import swal from 'sweetalert2';
 
-const Mutate = gql`
-  mutation UpdateContact(
-    $id: ID!
-    $username: String!
-    $phone: String!
-    $name: String!
-    $avatar: String!
-    $cover: String!
-  ) {
-    updateContact(
-      where: { id: $id }
-      data: {
-        username: $username 
-        phone: $phone 
-        name: $name 
-        avatar: $avatar 
-        cover: $cover 
-      }
-    ) {
-      id 
-      username 
-      phone 
-      name 
-      avatar 
-      cover 
-    }
-  }
-`;
-
-const Remove = gql`
-  mutation RemoveContact(
-    $id: ID!
-  ) {
-    removeContact(
-      where: { id: $id }
-    ) {
-      id
-    }
-  }
-`;
+// $FlowFixMe
+import UpdateContact from '../../graphql/contacts/update.gql';
+// $FlowFixMe
+import RemoveContact from '../../graphql/contacts/remove.gql';
 
 export const ContactEditor = ({ contact }) => {
   const context = useFlippableProvider();
-  const [updateContact] = useMutation(Mutate);
+  const [updateContact] = useMutation(UpdateContact);
+  const [removeContact] = useMutation(RemoveContact);
   const { setter: toggleSide } = context;
+  const theme = useTheme();
   const saveContact = useCallback(
     (data) => {
       const updateObject = { ...contact, ...data };
@@ -61,6 +30,41 @@ export const ContactEditor = ({ contact }) => {
     },
     [toggleSide, updateContact, contact],
   );
+  const removeContactHandle = useCallback(
+    async () => {
+      swal.queue([{
+        title: contact.name,
+        text: `Are you sure you want to remove this contact?`,
+        confirmButtonText: "Yes",
+        cancelButtonText: "No",
+        focusCancel: true,
+        showCancelButton: true,
+        showLoaderOnConfirm: true,
+        confirmButtonColor: theme.palette.primary.main,
+        cancelButtonColor: theme.palette.secondary.main,
+        imageUrl: contact.avatar,
+        preConfirm: () => new Promise((accept, reject) => {
+            removeContact({
+              variables: { id: contact.id },
+              update: accept,
+            });
+          }).then((data) => {
+            swal.insertQueueStep({
+              timer: 2000,
+              type: 'success',
+              title: contact.name,
+              text: 'Contact removed successfully'
+            });
+          }).catch(() => {
+            swal.insertQueueStep({
+              type: 'error',
+              title: 'An error has occurred!'
+            });
+          })
+      }]);
+    },
+    [removeContact, contact, theme],
+  );
   return (
     <FlipContext.Provider value={context}>
       <Flippable
@@ -68,7 +72,13 @@ export const ContactEditor = ({ contact }) => {
         // autoFaces
         // simple
         naked
-        frontFace={<Preview contact={contact} onEdit={toggleSide} />}
+        frontFace={(
+          <Preview
+            contact={contact}
+            onEdit={toggleSide}
+            onRemove={removeContactHandle}
+          />
+        )}
         backFace={(
           <Editor
             onCancel={toggleSide}

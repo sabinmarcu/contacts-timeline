@@ -1,0 +1,27 @@
+#include "./contact.fragment.gql"
+mutation (
+  $id: ID!
+  $username: String!
+  $phone: String!
+  $name: String!
+  $avatar: String!
+  $cover: String!
+) {
+  updateContact(
+    where: { id: $id }
+    data: {
+      username: $username 
+      phone: $phone 
+      name: $name 
+      avatar: $avatar 
+      cover: $cover 
+    }
+  ) {  
+    id
+    name
+    username
+    avatar
+    cover
+    phone
+  }
+}

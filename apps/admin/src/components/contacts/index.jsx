@@ -2,7 +2,6 @@
 
 import React from 'react';
 import { useSubscription, useQuery } from '@apollo/react-hooks';
-import gql from 'graphql-tag';
 
 import Contact from '../contact';
 
@@ -15,41 +14,49 @@ import {
 } from './style';
 
 // $FlowFixMe
-// import { Contacts, ContactsSubscription } from '../../graphql/contacts.graphql';
-// console.log(ContactsSubscription);
-
-const Contacts = gql`
-  query Contacts {
-    contacts {
-      id
-      name
-      username
-      phone
-      avatar
-      cover
-    }
-  }
-`;
-
-const ContactsSubscription = gql`
-  subscription ContactsSubscription {
-    contact {
-      mutation
-      node {
-        id
-        name
-        username
-        phone
-        avatar
-        cover
-      }
-    }
-  }
-`;
+import Contacts from '../../graphql/contacts/list.gql';
+// $FlowFixMe
+import ContactsSubscription from '../../graphql/contacts/subscription.gql';
 
 export const ContactsList = () => {
   const { data, error, loading } = useQuery(Contacts);
-  useSubscription(ContactsSubscription, { shouldResubscribe: true });
+  useSubscription(ContactsSubscription, {
+    onSubscriptionData: ({
+      client,
+      subscriptionData: {
+        data: {
+          contact: {
+            mutation,
+            node: contact,
+            previousValues,
+          },
+        },
+      },
+    }) => {
+      const previousQuery = client.readQuery({ query: Contacts });
+      let update = null;
+      switch (mutation) {
+        case 'DELETED':
+          update = previousQuery.contacts.filter(
+            ({ id }) => id !== previousValues.id,
+          );
+          break;
+        case 'CREATED':
+          update = [
+            contact,
+            ...previousQuery.contacts,
+          ];
+          break;
+        default: break;
+      }
+      if (update) {
+        client.writeQuery({
+          query: Contacts,
+          data: { contacts: update },
+        });
+      }
+    },
+  });
   if (loading) {
     return (
       <LoadingWrapper>

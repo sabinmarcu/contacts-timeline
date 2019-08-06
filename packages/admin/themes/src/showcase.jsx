@@ -76,7 +76,7 @@ const getVariant = <T, P: StyleDefinitionType<T>>(
 ): $ElementType<$ElementType<P, 'variants'>, T> => variants[variant];
 
 export type Props = {
-  variant: ShowcaseLayoutStyle,
+  variant?: ShowcaseLayoutStyle,
   themes: {[key: string]: ThemeFormat },
   children: any
 };

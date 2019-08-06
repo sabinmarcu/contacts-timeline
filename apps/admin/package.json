@@ -25,6 +25,7 @@
     "react-scripts": "3.0.1",
     "rimraf": "^2.6.3",
     "subscriptions-transport-ws": "^0.9.16",
+    "sweetalert2": "^8.15.2",
     "typeface-roboto": "^0.0.54"
   },
   "scripts": {

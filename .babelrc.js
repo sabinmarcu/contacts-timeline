@@ -6,7 +6,7 @@ module.exports = {
   "plugins": [
     "@babel/plugin-proposal-export-namespace-from",
     "@babel/plugin-syntax-export-namespace-from",
-    "import-graphql"
+    // "import-graphql"
     // ["import-graphql", { runtime: true }]
   ]
 };

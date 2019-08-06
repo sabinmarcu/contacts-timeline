@@ -12,7 +12,7 @@ const maxConversations = 3;
 (async () => {
   const contacts = await Promise.all((new Array(contactsNumber))
     .fill(0)
-    .map(() => prisma.createContact(makeContact())));
+    .map(() => prisma.createContact(makeContact(false))));
 
   await contacts.forEach(async (
     contact: Contact,

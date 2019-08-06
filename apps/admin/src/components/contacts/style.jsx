@@ -15,7 +15,7 @@ export const List = ({
   amount,
   minWidth = 300,
   maxWidth = 500,
-  height = 300,
+  height = 400,
   margin = 15,
   children,
 }: {
@@ -55,7 +55,9 @@ export const Grid = styled.section`
   grid-template-rows: repeat(auto-fill, minmax(${({ height }) => height}px, 1fr));
   grid-gap: ${({ margin }) => margin}px;
   margin: ${({ margin }) => margin}px;
-  height: ${({ amount, columns, height }) => Math.ceil(amount / columns) * height}px;
+  height: ${({
+    amount, columns, height, margin,
+  }) => Math.ceil(amount / columns) * (height + margin)}px;
   /* display: flex;
   flex-flow: row wrap;
   align-items: space-around;

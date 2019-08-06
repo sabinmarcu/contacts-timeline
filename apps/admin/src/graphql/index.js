@@ -5,7 +5,7 @@ import { getMainDefinition } from 'apollo-utilities';
 import { ApolloLink, split } from 'apollo-link';
 import { WebSocketLink } from 'apollo-link-ws';
 import { HttpLink } from 'apollo-link-http';
-import { InMemoryCache } from 'apollo-cache-inmemory';
+import { InMemoryCache, defaultDataIdFromObject } from 'apollo-cache-inmemory';
 import { SubscriptionClient } from 'subscriptions-transport-ws';
 
 console.log('Connecting to prisma at', process.env.REACT_APP_PRISMA_URL);
@@ -31,15 +31,22 @@ const link = ApolloLink.from([terminatingLink]);
 
 const makeDataId = (({ __typename, id }) => (id ? `${__typename}:${id}` : null));
 const cache = new InMemoryCache({
-  dataIdFromObject: ({ __typename, id, mutation, node, ...props }) => {
+  dataIdFromObject: (object) => {
     let returnId = null;
+    const {
+      __typename,
+      id,
+      node,
+    } = object;
     if (__typename.includes('Subscription')) {
+      if (!node) {
+        return 'deleted';
+      }
       returnId = makeDataId(node);
     } else {
       returnId = makeDataId({ __typename, id });
     }
-    console.log(returnId, {__typename, mutation, id, node, props});
-    return returnId;
+    return returnId || defaultDataIdFromObject(object);
   },
 });
 
