@@ -14,13 +14,13 @@ import {
   date,
 } from 'faker';
 
-export const makeContact = (): Contact => ({
-  id: lorem.slug(),
+export const makeContact = (withId: boolean = false): Contact => ({
   name: `${name.firstName()} ${name.lastName()}`,
   username: internet.userName(),
   phone: phone.phoneNumber(),
   avatar: image.avatar(),
   cover: image.animals(),
+  ...(withId ? { id: `${parseInt(Math.random() * 100, 10)}` } : {}),
 });
 
 export const makeMessage = (): Message => ({
