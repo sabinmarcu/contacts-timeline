@@ -27,12 +27,16 @@ module.exports = (config) => {
       loader: 'linaria/loader',
       options: {
         sourceMap: DEV,
+        cacheDirectory: 'src/.linaria_cache',
         babelOptions: {
           ...babelLoaderVariables.options,
         },
       },
     };
     delete linariaLoader.options.babelOptions.cacheDirectory;
+    delete linariaLoader.options.babelOptions.cacheCompression;
+    delete linariaLoader.options.babelOptions.cacheIdentifier;
+    delete linariaLoader.options.babelOptions.customize;
     babelLoader.use = [
       babelLoaderVariables,
       linariaLoader,
