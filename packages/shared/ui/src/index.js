@@ -1,3 +1,3 @@
 // @flow
 
-export { Flippable, FlipContext, Sides } from './flippable';
+export { Flippable, FlipContext, useFlippableProvider, Sides } from './flippable';

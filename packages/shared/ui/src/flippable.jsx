@@ -9,6 +9,7 @@ import React, {
   useLayoutEffect,
   useImperativeHandle,
   useContext,
+  useEffect,
   cloneElement,
   createContext,
   forwardRef,
@@ -56,21 +57,31 @@ const SideComponent = ({
   children,
   style,
   active,
-}: SideProps, ref: Ref<*>) => (
-  <div
-    style={{
-      ...style,
-      position: 'absolute',
-      transition: 'opacity .5s ease-out',
-      transitionDelay: active ? '.5s' : '0s',
-      transitionDuration: active ? '.5s' : '.3s',
-      opacity: active ? 1 : 0,
-      zIndex: active ? 1 : -1,
-    }}
-  >
-    {cloneElement(children, { ref })}
-  </div>
-);
+  animationDuration,
+}: SideProps, ref: Ref<*>) => {
+  const [zIndex, setZIndex] = useState(active ? 1 : 0);
+  useEffect(
+    () => {
+      setTimeout(setZIndex, animationDuration, active ? 1 : 0);
+    },
+    [active, setZIndex],
+  );
+  return (
+    <div
+      style={{
+        ...style,
+        position: 'absolute',
+        transition: 'opacity .5s ease-out',
+        transitionDelay: active ? `.${animationDuration}s` : `0s`,
+        transitionDuration: active ? `.${animationDuration}s` : `.${animationDuration * 60 / 100}s`,
+        opacity: active ? 1 : 0,
+        zIndex: active ? 1 : -1,
+      }}
+    >
+      {cloneElement(children, { ref })}
+    </div>
+  );
+};
 export const Side = forwardRef<
   SideProps,
   typeof SideComponent,
@@ -88,6 +99,7 @@ export type Props = {
   autoBackFace?: boolean,
   autoFaces?: boolean,
   autoSize?: boolean,
+  animationDuration?: number,
 }
 
 export const useFlippableProvider = (defaultSide = Sides.front) => {
@@ -130,6 +142,7 @@ export const FlippableComponent = ({
   autoBackFace,
   autoFaces,
   autoSize,
+  animationDuration = .5,
 }: Props) => {
   const [init, setInit] = useState(false);
   const { value: sideState } = useContext(FlipContext);
@@ -168,7 +181,7 @@ export const FlippableComponent = ({
   const parentStyles = useMemo(
     () => {
       let finalStyles = {
-        transition: 'all .5s ease-out',
+        transition: `all ${animationDuration}s ease-out`,
       };
       if (autoSize) {
         finalStyles = { ...finalStyles, flex: 1 };
@@ -188,19 +201,19 @@ export const FlippableComponent = ({
   const frontSideStyles = useMemo(
     () => {
       if (autoSize) {
-        return { flex: 1, ...wrapperSize };
+        return { flex: 1, display: 'flex', ...wrapperSize };
       }
       if (!(autoFaces || autoFrontFace)) {
         return frontSize;
       }
     },
-    [autoSize, autoFaces, autoFrontFace, frontSize]
+    [autoSize, autoFaces, autoFrontFace, frontSize, wrapperSize]
   )
   const backSideStyles = useMemo(
     () => {
       let finalStyles = {};
       if (autoSize) {
-        finalStyles = { ...finalStyles, flow: 1, ...wrapperSize };
+        finalStyles = { ...finalStyles, flex: 1, display: 'flex',...wrapperSize };
       } else {
         if (!(autoFaces || autoBackFace)) {
           finalStyles = { ... finalStyles, ...backSize };
@@ -211,7 +224,7 @@ export const FlippableComponent = ({
       }
       return finalStyles;
     },
-    [autoSize, autoFaces, autoBackFace, backSize, sideState, init, simple],
+    [autoSize, autoFaces, autoBackFace, backSize, sideState, init, simple, wrapperSize],
   )
   return (
     <>
@@ -227,6 +240,7 @@ export const FlippableComponent = ({
                   ref={measureRef}
                   style={frontSideStyles}
                   active={sideState === Sides.front}
+                  animationDuration={animationDuration}
                 >
                   {frontFace}
                 </Side>
@@ -238,6 +252,7 @@ export const FlippableComponent = ({
                   ref={measureRef}
                   style={backSideStyles}
                   active={sideState === Sides.back}
+                  animationDuration={animationDuration}
                 >
                   {backFace}
                 </Side>
