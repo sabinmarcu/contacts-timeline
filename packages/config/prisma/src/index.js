@@ -6,10 +6,10 @@
 // Please don't change this file manually but run `prisma generate` to update it.
 // For more information, please read the docs: https://www.prisma.io/docs/prisma-client/
 
-import type { DocumentNode } from 'graphql';
-import type { BasePrismaOptions as BPOType } from 'prisma-client-lib';
-import { makePrismaClientClass, Model } from 'prisma-client-lib';
-import { typeDefs } from './prisma-schema';
+import type { DocumentNode } from "graphql";
+import type { BasePrismaOptions as BPOType } from "prisma-client-lib";
+import { makePrismaClientClass, Model } from "prisma-client-lib";
+import { typeDefs } from "./prisma-schema";
 
 type NodePromise = Promise<Node>;
 
@@ -1275,21 +1275,21 @@ export type Long = string;
 
 export const models: Model[] = [
   {
-    name: 'Contact',
-    embedded: false,
+    name: "Contact",
+    embedded: false
   },
   {
-    name: 'Message',
-    embedded: false,
+    name: "Message",
+    embedded: false
   },
   {
-    name: 'History',
-    embedded: false,
+    name: "History",
+    embedded: false
   },
   {
-    name: 'Snapshot',
-    embedded: false,
-  },
+    name: "Snapshot",
+    embedded: false
+  }
 ];
 
 /**
@@ -1297,7 +1297,7 @@ export const models: Model[] = [
  */
 
 export const Prisma: ClientConstructor<PrismaInterface> = makePrismaClientClass(
-  { typeDefs, models, endpoint: `${process.env.PRISMA_ENDPOINT || ''}` },
+  { typeDefs, models, endpoint: `${process.env["PRISMA_ENDPOINT"] || ""}` }
 );
 
 export const prisma = new Prisma();
