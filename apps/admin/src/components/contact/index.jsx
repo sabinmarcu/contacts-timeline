@@ -5,26 +5,49 @@ import {
   Flippable, FlipContext, useFlippableProvider,
 } from '@ct/ui';
 import { Preview, Editor } from '@ct/contacts';
+import { useMutation } from 'react-apollo-hooks';
+import gql from 'graphql-tag';
+
+const Mutate = gql`
+  mutation UpdateContact(
+    $id: ID!
+    $username: String!
+    $phone: String!
+    $name: String!
+    $avatar: String!
+    $cover: String!
+  ) {
+    updateContact(
+      where: { id: $id }
+      data: {
+        username: $username 
+        phone: $phone 
+        name: $name 
+        avatar: $avatar 
+        cover: $cover 
+      }
+    ) {
+      id 
+      username 
+      phone 
+      name 
+      avatar 
+      cover 
+    }
+  }
+`;
 
 export const ContactEditor = ({ contact }) => {
   const context = useFlippableProvider();
+  const [updateContact] = useMutation(Mutate);
   const { setter: toggleSide } = context;
-  const [state, setState] = useState(contact);
-  const [inputState, setInputState] = useState(state);
-  const saveState = useCallback(
-    () => {
-      setState(inputState);
+  const saveContact = useCallback(
+    (data) => {
+      const updateObject = { ...contact, ...data };
+      updateContact({ optimisticResponse: updateObject, variables: updateObject })
       toggleSide();
-    },
-    [inputState, setState, toggleSide],
-  );
-  const cancelEditing = useCallback(
-    () => {
-      setInputState(state);
-      toggleSide();
-    },
-    [state, setInputState, toggleSide],
-  );
+    }
+  )
   return (
     <FlipContext.Provider value={context}>
       <Flippable
@@ -32,15 +55,12 @@ export const ContactEditor = ({ contact }) => {
         // autoFaces
         // simple
         naked
-        frontFace={
-          <Preview contact={state} onEdit={toggleSide} />
-        }
+        frontFace={<Preview contact={contact} onEdit={toggleSide} />}
         backFace={(
           <Editor
-            onUpdate={setInputState}
-            onCancel={cancelEditing}
-            onSave={saveState}
-            contact={inputState}
+            onCancel={toggleSide}
+            onSave={saveContact}
+            contact={contact}
           />
         )}
       />

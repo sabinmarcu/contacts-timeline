@@ -1,7 +1,8 @@
 // @flow
 
 import React from 'react';
-import { useQuery } from 'react-apollo-hooks';
+import { useSubscription, useQuery } from 'react-apollo-hooks';
+import gql from 'graphql-tag';
 
 import Contact from '../contact';
 
@@ -14,10 +15,42 @@ import {
 } from './style';
 
 // $FlowFixMe
-import ContactsQuery from '../../graphql/contacts.graphql';
+// import { Contacts, ContactsSubscription } from '../../graphql/contacts.graphql';
+// console.log(ContactsSubscription);
+
+const Contacts = gql`
+  query Contacts {
+    contacts {
+      id
+      name
+      username
+      phone
+      avatar
+      cover
+    }
+  }
+`
+
+const ContactsSubscription = gql`
+  subscription ContactsSubscription {
+    contact(
+      where: { mutation_in: UPDATED }
+    ) {
+      node {
+        id
+        name
+        username
+        phone
+        avatar
+        cover
+      }
+    }
+  }
+`
 
 export const ContactsList = () => {
-  const { data, loading, error } = useQuery(ContactsQuery);
+  const { data, error, loading } = useQuery(Contacts);
+  const {data: subData, error: subError, loading: subLoading} = useSubscription(ContactsSubscription);
   if (loading) {
     return (
       <LoadingWrapper>
@@ -29,11 +62,14 @@ export const ContactsList = () => {
   if (error) {
     return <div>{error}</div>;
   }
+  console.log("UPDATE DATA", subData, subError, subLoading);
+  console.log("DATA", data);
+  const { contacts } = data;
   return (
     <Wrapper>
-      <List amount={data.contacts.length} columns={3}>
-        {data.contacts.map(({ id, ...rest }) => (
-          <Contact contact={{ id, ...rest }} />
+      <List amount={contacts.length} columns={3}>
+        {contacts.map(({ id, ...rest }) => (
+          <Contact key={id} contact={{ id, ...rest }} />
         ))}
       </List>
     </Wrapper>

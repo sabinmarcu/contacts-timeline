@@ -48,21 +48,21 @@ export const List = ({
 };
 
 export const Grid = styled.section`
-  perspective: 2000px;
-  perspective-origin: top center;
+  /* perspective: 2000px;
+  perspective-origin: top center; */
   display: grid;
   grid-template-columns: repeat(${({ columns }) => columns}, 1fr);
   grid-template-rows: repeat(auto-fill, minmax(${({ height }) => height}px, 1fr));
-  grid-gap: ${({ margin }) => margin};
-  margin: ${({ margin }) => margin};
+  grid-gap: ${({ margin }) => margin}px;
+  margin: ${({ margin }) => margin}px;
   height: ${({ amount, columns, height }) => Math.ceil(amount / columns) * height}px;
   /* display: flex;
   flex-flow: row wrap;
   align-items: space-around;
   justify-content: center; */
-  /* padding: 7.5px;
+  /* padding: ${({ margin }) => margin / 2}px;
   & > * {
-    margin: 7.5px;
+    margin: ${({ margin }) => margin / 2}px;
   } */
 `;
 

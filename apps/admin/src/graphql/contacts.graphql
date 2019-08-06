@@ -1,9 +1,23 @@
 query Contacts {
   contacts {
+    id
     name
     username
     phone
     avatar
     cover
+  }
+}
+
+subscription ContactsSubscription {
+  contact {
+    node {
+      id
+      name
+      username
+      phone
+      avatar
+      cover
+    }
   }
 }

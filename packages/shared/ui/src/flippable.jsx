@@ -78,14 +78,16 @@ const SideComponent = ({
         opacity: active ? 1 : 0,
         zIndex,
       }}
+      ref={ref}
     >
-      {cloneElement(children, { ref })}
+      {/* {cloneElement(children, { ref })} */}
+      {typeof children === 'function' ? children() : children}
     </div>
   );
 };
 export const Side = forwardRef<
   SideProps,
-  typeof SideComponent,
+  HTMLDivElement,
 >(SideComponent);
 
 export type Props = {
@@ -229,7 +231,13 @@ export const FlippableComponent = ({
     [autoSize, autoFaces, autoBackFace, backSize, sideState, init, simple, wrapperSize],
   );
   return (
-    <>
+    <div style={{
+      perspective: 800,
+      perspectiveOrigin: 'top center',
+      display: 'flex',
+      flex: 1,
+    }}
+    >
       <Measure bounds onResize={wrapperSizeSetter}>
         {({ measureRef: parentMeasureRef }) => (
           <ParentRender
@@ -264,7 +272,7 @@ export const FlippableComponent = ({
         )}
       </Measure>
       {children}
-    </>
+    </div>
   );
 };
 

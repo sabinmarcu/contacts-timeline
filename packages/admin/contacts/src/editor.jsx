@@ -220,13 +220,21 @@ const EditorComponent = ({
   const { resetData, isDirty, isValid, ...fields } = useForm({ // eslint-disable-line
     initialValues: contact,
   });
-  useEffect(
-    () => onUpdate && onUpdate(Object
+  const rawData = useMemo(
+    () => Object
       .keys(validatorsSet)
-      .reduce((prev, key) => ({ ...prev, [key]: fields[key].value }), {})),
-                          [fields.name, fields.username, fields.phone, fields.avatar, fields.cover, onUpdate],
-                        );
-                        return (
+      .reduce((prev, key) => ({ ...prev, [key]: fields[key].value }), {}),
+    [fields.name, fields.username, fields.phone, fields.avatar, fields.cover],
+  );
+  useEffect(
+    () => onUpdate && onUpdate(rawData),
+    [rawData, onUpdate],
+  );
+  const saveHandler = useCallback(
+    () => onSave && onSave(rawData),
+    [onSave, rawData],
+  );
+  return (
     <Card className={styles.card} ref={ref}>
       <CardHeader title={`${contact && contact.id ? 'Edit' : 'Create'} Contact`} />
       <CardContent className={styles.media}>
@@ -247,7 +255,7 @@ const EditorComponent = ({
       </CardContent>
       {onSave && (
       <CardActions>
-        <Button variant="contained" color="primary" onClick={onSave} disabled={!isValid}>Save</Button>
+        <Button variant="contained" color="primary" onClick={saveHandler} disabled={!isValid}>Save</Button>
         {onCancel && <Button variant="contained" color="secondary" onClick={onCancel}>Cancel</Button>}
         <Button variant="outlined" color="secondary" onClick={resetData} disabled={!isDirty}>Reset</Button>
       </CardActions>

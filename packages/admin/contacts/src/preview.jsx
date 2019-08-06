@@ -28,7 +28,7 @@ export type Props = {
   onRemove?: Function,
 };
 
-const PreviewComponent = ({
+export const Preview = ({
   contact: {
     name,
     avatar,
@@ -41,8 +41,8 @@ const PreviewComponent = ({
   },
   onEdit,
   onRemove,
-}: Props, ref: Ref<*>) => (
-  <Card className={styles.card} ref={ref}>
+}: Props) => (
+  <Card className={styles.card}>
     <CardHeader
       title={name}
       subheader={`@${username} | #${phone}`}
@@ -78,10 +78,5 @@ const PreviewComponent = ({
     )}
   </Card>
 );
-
-export const Preview = forwardRef<
-  Props,
-  typeof PreviewComponent,
->(PreviewComponent);
 
 export default Preview;
