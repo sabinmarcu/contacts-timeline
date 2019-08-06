@@ -2,5 +2,5 @@ node_modules
 *.log
 .env
 !apps/**/.env
-style.linaria.css
+*.linaria.css
 .linaria_cache

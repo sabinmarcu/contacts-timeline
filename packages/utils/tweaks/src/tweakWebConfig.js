@@ -62,9 +62,6 @@ module.exports = (config) => {
       ];
     }
   });
-  // console.log(babelLoaders);
-  // console.log(JSON.stringify(babelLoaders));
-  // process.exit(0);
   const cssLoaders = rules.filter(({ test }) => `${test}`.match(/[^s]css/));
   cssLoaders.forEach(({ use }) => {
     use.forEach((loader) => {

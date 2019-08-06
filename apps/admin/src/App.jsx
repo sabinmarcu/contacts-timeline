@@ -1,20 +1,25 @@
 import React from 'react';
-import ThemeProvider from '@material-ui/styles/ThemeProvider';
 import { ApolloProvider } from 'react-apollo-hooks';
 
-import { Navigation } from '@ct/layout';
+import {
+  Navigation,
+  ThemeProvider,
+  useThemeProvider,
+  ThemeSwitcher,
+} from '@ct/layout';
 import { client } from './graphql';
 
 import { ContactsRoute } from './routes/home';
 
 function App() {
+  const context = useThemeProvider();
   return (
-    <ApolloProvider client={client}>
-      <ThemeProvider>
-        <Navigation style={{ flex: 0 }} />
+    <ThemeProvider value={context}>
+      <ApolloProvider client={client}>
+        <Navigation style={{ flex: 0 }} right={<ThemeSwitcher />} />
         <ContactsRoute />
-      </ThemeProvider>
-    </ApolloProvider>
+      </ApolloProvider>
+    </ThemeProvider>
   );
 }
 

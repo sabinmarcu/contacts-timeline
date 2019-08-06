@@ -29,7 +29,7 @@ const Contacts = gql`
       cover
     }
   }
-`
+`;
 
 const ContactsSubscription = gql`
   subscription ContactsSubscription {
@@ -46,11 +46,11 @@ const ContactsSubscription = gql`
       }
     }
   }
-`
+`;
 
 export const ContactsList = () => {
   const { data, error, loading } = useQuery(Contacts);
-  const {data: subData, error: subError, loading: subLoading} = useSubscription(ContactsSubscription);
+  useSubscription(ContactsSubscription);
   if (loading) {
     return (
       <LoadingWrapper>
@@ -62,8 +62,6 @@ export const ContactsList = () => {
   if (error) {
     return <div>{error}</div>;
   }
-  console.log("UPDATE DATA", subData, subError, subLoading);
-  console.log("DATA", data);
   const { contacts } = data;
   return (
     <Wrapper>

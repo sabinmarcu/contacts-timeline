@@ -1,5 +1,5 @@
 import React, {
-  useState, useCallback,
+  useCallback,
 } from 'react';
 import {
   Flippable, FlipContext, useFlippableProvider,
@@ -44,10 +44,11 @@ export const ContactEditor = ({ contact }) => {
   const saveContact = useCallback(
     (data) => {
       const updateObject = { ...contact, ...data };
-      updateContact({ optimisticResponse: updateObject, variables: updateObject })
+      updateContact({ optimisticResponse: updateObject, variables: updateObject });
       toggleSide();
-    }
-  )
+    },
+    [toggleSide, updateContact, contact],
+  );
   return (
     <FlipContext.Provider value={context}>
       <Flippable
