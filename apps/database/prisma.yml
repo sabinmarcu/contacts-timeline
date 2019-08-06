@@ -13,4 +13,4 @@ generate:
 
 # Seeds initial data into the database by running a script.
 seed:
-  run: babel-node ./src/seed.js
+  run: yarn seed
