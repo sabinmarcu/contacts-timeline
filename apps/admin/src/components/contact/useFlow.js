@@ -25,7 +25,7 @@ export const useFlow = <T: string[]>(steps: T): UseFlowReturnType<T> => {
       },
       {},
     ),
-    [],
+    [steps],
   );
   const [step, setStep] = useState(0);
   const nextStep = useCallback(
