@@ -5,7 +5,6 @@ import React, {
   useState,
   useMemo,
   useCallback,
-  cloneElement,
   type Node as ReactNode,
 } from 'react';
 import {
@@ -22,7 +21,7 @@ import { type ThemeFormat } from './themes/types';
 const ThemePicker = ({
   themes = {},
   children,
-} : {
+}: {
   themes: { [key: string]: ThemeFormat },
   children: any,
 }) => {
@@ -51,7 +50,7 @@ const ThemePicker = ({
           ))}
         </Select>
       </FormControl>
-      {cloneElement(children)}
+      {children}
     </ThemeProvider>
   );
 };

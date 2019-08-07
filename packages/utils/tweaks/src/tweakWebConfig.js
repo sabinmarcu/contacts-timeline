@@ -3,18 +3,26 @@
 const { resolve } = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
+const BabelConfig = require(resolve(__dirname, '../../../../.babelrc'));
+
 const DEV = process.env.NODE_ENV !== 'production';
 
-module.exports = (config) => {
+module.exports = (config, isStorybook = false) => {
+  config.resolve.extensions.push(
+    '.graphql',
+    '.gql',
+  );
   const rulesParent = config.module.rules.find(({ oneOf }) => !!oneOf);
   const rules = rulesParent ? rulesParent.oneOf : config.module.rules;
   const babelLoaders = rules.filter(({ test }) => `${test}`.includes('js'));
   babelLoaders.forEach((babelLoader) => {
-    if (!DEV && babelLoader.options) {
-      delete babelLoader.options.cacheDirectory;
-      delete babelLoader.options.cacheCompression;
-      delete babelLoader.options.cacheIdentifier;
-    }
+    console.log('ENV: ', process.env.NODE_ENV);
+    console.log(
+      'REACT VARS: ',
+      ...Object.keys(process.env)
+        .filter(key => /^REACT_APP/.test(key))
+        .map(key => `\n\tKey: '${key}'\n\tValue: '${process.env[key]}'\n`),
+    );
     const babelLoaderVariables = babelLoader.loader && babelLoader.options
       ? {
         loader: babelLoader.loader,
@@ -23,17 +31,39 @@ module.exports = (config) => {
         loader: babelLoader.use[0].loader,
         options: babelLoader.use[0].options,
       };
-    babelLoader.use = [
-      babelLoaderVariables,
-      {
-        loader: 'linaria/loader',
-        options: {
-          sourceMap: DEV,
-          babelOptions: {
-            ...babelLoaderVariables.options,
-          },
+    if (!DEV && babelLoaderVariables.options) {
+      delete babelLoaderVariables.options.cacheDirectory;
+      delete babelLoaderVariables.options.cacheCompression;
+      delete babelLoaderVariables.options.cacheIdentifier;
+    }
+    if (!isStorybook) {
+      Object.keys(BabelConfig)
+        .forEach((key) => {
+          if (babelLoaderVariables.options[key]) {
+            babelLoaderVariables.options[key] = [
+              ...babelLoaderVariables.options[key],
+              ...BabelConfig[key],
+            ].filter((it, index, array) => array.indexOf(it) === index);
+          }
+        });
+    }
+    const linariaLoader = {
+      loader: 'linaria/loader',
+      options: {
+        sourceMap: DEV,
+        cacheDirectory: 'src/.linaria_cache',
+        babelOptions: {
+          ...babelLoaderVariables.options,
         },
       },
+    };
+    delete linariaLoader.options.babelOptions.cacheDirectory;
+    delete linariaLoader.options.babelOptions.cacheCompression;
+    delete linariaLoader.options.babelOptions.cacheIdentifier;
+    delete linariaLoader.options.babelOptions.customize;
+    babelLoader.use = [
+      babelLoaderVariables,
+      linariaLoader,
     ];
     delete babelLoader.loader;
     delete babelLoader.options;
@@ -46,9 +76,6 @@ module.exports = (config) => {
       ];
     }
   });
-  // console.log(babelLoaders);
-  // console.log(JSON.stringify(babelLoaders));
-  // process.exit(0);
   const cssLoaders = rules.filter(({ test }) => `${test}`.match(/[^s]css/));
   cssLoaders.forEach(({ use }) => {
     use.forEach((loader) => {
@@ -66,6 +93,11 @@ module.exports = (config) => {
         },
       });
     }
+  });
+  rules.unshift({
+    test: /\.(graphql|gql)$/,
+    exclude: /node_modules/,
+    loader: 'graphql-tag/loader',
   });
   config.plugins.push(new MiniCssExtractPlugin({
     filename: 'styles.css',

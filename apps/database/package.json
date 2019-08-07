@@ -16,7 +16,7 @@
     "deploy:local": "prisma deploy",
     "deploy:local:clean": "prisma reset -f && prisma deploy && prisma seed",
     "deploy:local:force": "prisma delete && yarn deploy:local",
-    "seed": "babel-node src/seed"
+    "seed": "babel-node --ignore ../../**/node_modules --config-file ../../.babelrc.js src/seed"
   },
   "main": "index.js",
   "license": "MIT",

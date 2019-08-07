@@ -1,0 +1,17 @@
+#include "./contact.fragment.gql"
+subscription ContactsSubscription {
+  contact {
+    mutation
+    previousValues {
+      id
+    }
+    node {  
+      id
+      name
+      username
+      avatar
+      cover
+      phone
+    }
+  }
+}

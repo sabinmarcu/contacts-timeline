@@ -1,0 +1,6 @@
+
+ {
+   schema: {
+     files: 'packages/config/prisma/src/schema.graphql'
+   }
+ }

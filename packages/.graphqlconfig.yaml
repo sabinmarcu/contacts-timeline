@@ -1,0 +1,6 @@
+schemaPath: packages/config/prisma/src/schema.graphql
+extensions:
+  endpoints: 
+    dev: 
+      url: http://localhost:4466
+      subscription: ws://localhost:4466

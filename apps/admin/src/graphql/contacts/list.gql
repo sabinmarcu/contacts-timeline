@@ -1,0 +1,13 @@
+#include "./contact.fragment.gql"
+query {
+  contacts (
+    orderBy: id_ASC
+  ) {  
+    id
+    name
+    username
+    avatar
+    cover
+    phone
+  }
+}

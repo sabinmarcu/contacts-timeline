@@ -2,9 +2,11 @@ type Contact {
   id: ID! @id
   username: String! @unique
   phone: String! @unique
-  name: String 
-  avatar: String
-  cover: String
+  name: String!
+  avatar: String!
+  cover: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
 type Message {

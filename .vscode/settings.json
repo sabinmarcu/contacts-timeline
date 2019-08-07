@@ -1,4 +1,11 @@
 {
     "typescript.validate.enable": false,
     "javascript.validate.enable": false,
+    "typescript.format.enable": false,
+    "html.autoClosingTags": false,
+    "files.eol": "\n",
+    "eslint.enable": true,
+    "atlascode.jira.workingSite": {
+        "baseUrlSuffix": "atlassian.net"
+    }
 }

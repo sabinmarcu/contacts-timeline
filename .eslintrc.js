@@ -2,7 +2,10 @@ const path = require('path');
 
 module.exports = {
   parser: "babel-eslint",
-  extends: ["airbnb"],
+  extends: [
+    "airbnb",
+    "plugin:flowtype/recommended",
+  ],
   plugins: ["flowtype"],
   env: {
     browser: true,
@@ -22,5 +25,6 @@ module.exports = {
   },
   rules: {
     'react/prop-types': 0,
+    'react/require-default-props': [0]
   },
 };

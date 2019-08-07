@@ -1,0 +1,8 @@
+fragment ContactBody on Contact {
+  id
+  name
+  username
+  avatar
+  cover
+  phone
+}
