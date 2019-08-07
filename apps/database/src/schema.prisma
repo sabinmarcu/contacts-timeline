@@ -5,16 +5,18 @@ type Contact {
   name: String!
   avatar: String!
   cover: String!
-  createdAt: DateTime!
-  updatedAt: DateTime!
+  createdAt: DateTime! @createdAt
+  updatedAt: DateTime! @updatedAt
+  messagesSent: [Message!]! @relation(name: "Sender", onDelete: CASCADE)
+  messagesReceived: [Message!]! @relation(name: "Receiver", onDelete: CASCADE)
 }
 
 type Message {
   id: ID! @id
   date: DateTime!
   text: String!
-  from: Contact! @relation(name: "ContactA")
-  to: Contact! @relation(name: "ContactB")
+  from: Contact! @relation(link: INLINE, name: "Sender")
+  to: Contact! @relation(link: INLINE, name: "Receiver")
 }
 
 type History {

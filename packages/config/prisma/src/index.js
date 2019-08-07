@@ -208,6 +208,14 @@ export type ClientConstructor<T> = (options?: BPOType) => T;
  * Types
  */
 
+export type MessageOrderByInput =
+  | "id_ASC"
+  | "id_DESC"
+  | "date_ASC"
+  | "date_DESC"
+  | "text_ASC"
+  | "text_DESC";
+
 export type ContactOrderByInput =
   | "id_ASC"
   | "id_DESC"
@@ -220,17 +228,13 @@ export type ContactOrderByInput =
   | "avatar_ASC"
   | "avatar_DESC"
   | "cover_ASC"
-  | "cover_DESC";
+  | "cover_DESC"
+  | "createdAt_ASC"
+  | "createdAt_DESC"
+  | "updatedAt_ASC"
+  | "updatedAt_DESC";
 
 export type HistoryOrderByInput = "id_ASC" | "id_DESC";
-
-export type MessageOrderByInput =
-  | "id_ASC"
-  | "id_DESC"
-  | "date_ASC"
-  | "date_DESC"
-  | "text_ASC"
-  | "text_DESC";
 
 export type SnapshotOrderByInput = "id_ASC" | "id_DESC";
 
@@ -240,6 +244,50 @@ export type ContactWhereUniqueInput = {
   id?: ID_Input,
   username?: String,
   phone?: String
+};
+
+export type MessageWhereInput = {
+  id?: ID_Input,
+  id_not?: ID_Input,
+  id_in?: ID_Input[],
+  id_not_in?: ID_Input[],
+  id_lt?: ID_Input,
+  id_lte?: ID_Input,
+  id_gt?: ID_Input,
+  id_gte?: ID_Input,
+  id_contains?: ID_Input,
+  id_not_contains?: ID_Input,
+  id_starts_with?: ID_Input,
+  id_not_starts_with?: ID_Input,
+  id_ends_with?: ID_Input,
+  id_not_ends_with?: ID_Input,
+  date?: DateTimeInput,
+  date_not?: DateTimeInput,
+  date_in?: DateTimeInput[],
+  date_not_in?: DateTimeInput[],
+  date_lt?: DateTimeInput,
+  date_lte?: DateTimeInput,
+  date_gt?: DateTimeInput,
+  date_gte?: DateTimeInput,
+  text?: String,
+  text_not?: String,
+  text_in?: String[],
+  text_not_in?: String[],
+  text_lt?: String,
+  text_lte?: String,
+  text_gt?: String,
+  text_gte?: String,
+  text_contains?: String,
+  text_not_contains?: String,
+  text_starts_with?: String,
+  text_not_starts_with?: String,
+  text_ends_with?: String,
+  text_not_ends_with?: String,
+  from?: ContactWhereInput,
+  to?: ContactWhereInput,
+  AND?: MessageWhereInput[],
+  OR?: MessageWhereInput[],
+  NOT?: MessageWhereInput[]
 };
 
 export type ContactWhereInput = {
@@ -327,6 +375,28 @@ export type ContactWhereInput = {
   cover_not_starts_with?: String,
   cover_ends_with?: String,
   cover_not_ends_with?: String,
+  createdAt?: DateTimeInput,
+  createdAt_not?: DateTimeInput,
+  createdAt_in?: DateTimeInput[],
+  createdAt_not_in?: DateTimeInput[],
+  createdAt_lt?: DateTimeInput,
+  createdAt_lte?: DateTimeInput,
+  createdAt_gt?: DateTimeInput,
+  createdAt_gte?: DateTimeInput,
+  updatedAt?: DateTimeInput,
+  updatedAt_not?: DateTimeInput,
+  updatedAt_in?: DateTimeInput[],
+  updatedAt_not_in?: DateTimeInput[],
+  updatedAt_lt?: DateTimeInput,
+  updatedAt_lte?: DateTimeInput,
+  updatedAt_gt?: DateTimeInput,
+  updatedAt_gte?: DateTimeInput,
+  messagesSent_every?: MessageWhereInput,
+  messagesSent_some?: MessageWhereInput,
+  messagesSent_none?: MessageWhereInput,
+  messagesReceived_every?: MessageWhereInput,
+  messagesReceived_some?: MessageWhereInput,
+  messagesReceived_none?: MessageWhereInput,
   AND?: ContactWhereInput[],
   OR?: ContactWhereInput[],
   NOT?: ContactWhereInput[]
@@ -356,50 +426,6 @@ export type HistoryWhereInput = {
   AND?: HistoryWhereInput[],
   OR?: HistoryWhereInput[],
   NOT?: HistoryWhereInput[]
-};
-
-export type MessageWhereInput = {
-  id?: ID_Input,
-  id_not?: ID_Input,
-  id_in?: ID_Input[],
-  id_not_in?: ID_Input[],
-  id_lt?: ID_Input,
-  id_lte?: ID_Input,
-  id_gt?: ID_Input,
-  id_gte?: ID_Input,
-  id_contains?: ID_Input,
-  id_not_contains?: ID_Input,
-  id_starts_with?: ID_Input,
-  id_not_starts_with?: ID_Input,
-  id_ends_with?: ID_Input,
-  id_not_ends_with?: ID_Input,
-  date?: DateTimeInput,
-  date_not?: DateTimeInput,
-  date_in?: DateTimeInput[],
-  date_not_in?: DateTimeInput[],
-  date_lt?: DateTimeInput,
-  date_lte?: DateTimeInput,
-  date_gt?: DateTimeInput,
-  date_gte?: DateTimeInput,
-  text?: String,
-  text_not?: String,
-  text_in?: String[],
-  text_not_in?: String[],
-  text_lt?: String,
-  text_lte?: String,
-  text_gt?: String,
-  text_gte?: String,
-  text_contains?: String,
-  text_not_contains?: String,
-  text_starts_with?: String,
-  text_not_starts_with?: String,
-  text_ends_with?: String,
-  text_not_ends_with?: String,
-  from?: ContactWhereInput,
-  to?: ContactWhereInput,
-  AND?: MessageWhereInput[],
-  OR?: MessageWhereInput[],
-  NOT?: MessageWhereInput[]
 };
 
 export type MessageWhereUniqueInput = {
@@ -439,7 +465,63 @@ export type ContactCreateInput = {
   phone: String,
   name: String,
   avatar: String,
-  cover: String
+  cover: String,
+  messagesSent?: MessageCreateManyWithoutFromInput,
+  messagesReceived?: MessageCreateManyWithoutToInput
+};
+
+export type MessageCreateManyWithoutFromInput = {
+  create?: MessageCreateWithoutFromInput[],
+  connect?: MessageWhereUniqueInput[]
+};
+
+export type MessageCreateWithoutFromInput = {
+  id?: ID_Input,
+  date: DateTimeInput,
+  text: String,
+  to: ContactCreateOneWithoutMessagesReceivedInput
+};
+
+export type ContactCreateOneWithoutMessagesReceivedInput = {
+  create?: ContactCreateWithoutMessagesReceivedInput,
+  connect?: ContactWhereUniqueInput
+};
+
+export type ContactCreateWithoutMessagesReceivedInput = {
+  id?: ID_Input,
+  username: String,
+  phone: String,
+  name: String,
+  avatar: String,
+  cover: String,
+  messagesSent?: MessageCreateManyWithoutFromInput
+};
+
+export type MessageCreateManyWithoutToInput = {
+  create?: MessageCreateWithoutToInput[],
+  connect?: MessageWhereUniqueInput[]
+};
+
+export type MessageCreateWithoutToInput = {
+  id?: ID_Input,
+  date: DateTimeInput,
+  text: String,
+  from: ContactCreateOneWithoutMessagesSentInput
+};
+
+export type ContactCreateOneWithoutMessagesSentInput = {
+  create?: ContactCreateWithoutMessagesSentInput,
+  connect?: ContactWhereUniqueInput
+};
+
+export type ContactCreateWithoutMessagesSentInput = {
+  id?: ID_Input,
+  username: String,
+  phone: String,
+  name: String,
+  avatar: String,
+  cover: String,
+  messagesReceived?: MessageCreateManyWithoutToInput
 };
 
 export type ContactUpdateInput = {
@@ -447,7 +529,161 @@ export type ContactUpdateInput = {
   phone?: String,
   name?: String,
   avatar?: String,
-  cover?: String
+  cover?: String,
+  messagesSent?: MessageUpdateManyWithoutFromInput,
+  messagesReceived?: MessageUpdateManyWithoutToInput
+};
+
+export type MessageUpdateManyWithoutFromInput = {
+  create?: MessageCreateWithoutFromInput[],
+  delete?: MessageWhereUniqueInput[],
+  connect?: MessageWhereUniqueInput[],
+  set?: MessageWhereUniqueInput[],
+  disconnect?: MessageWhereUniqueInput[],
+  update?: MessageUpdateWithWhereUniqueWithoutFromInput[],
+  upsert?: MessageUpsertWithWhereUniqueWithoutFromInput[],
+  deleteMany?: MessageScalarWhereInput[],
+  updateMany?: MessageUpdateManyWithWhereNestedInput[]
+};
+
+export type MessageUpdateWithWhereUniqueWithoutFromInput = {
+  where: MessageWhereUniqueInput,
+  data: MessageUpdateWithoutFromDataInput
+};
+
+export type MessageUpdateWithoutFromDataInput = {
+  date?: DateTimeInput,
+  text?: String,
+  to?: ContactUpdateOneRequiredWithoutMessagesReceivedInput
+};
+
+export type ContactUpdateOneRequiredWithoutMessagesReceivedInput = {
+  create?: ContactCreateWithoutMessagesReceivedInput,
+  update?: ContactUpdateWithoutMessagesReceivedDataInput,
+  upsert?: ContactUpsertWithoutMessagesReceivedInput,
+  connect?: ContactWhereUniqueInput
+};
+
+export type ContactUpdateWithoutMessagesReceivedDataInput = {
+  username?: String,
+  phone?: String,
+  name?: String,
+  avatar?: String,
+  cover?: String,
+  messagesSent?: MessageUpdateManyWithoutFromInput
+};
+
+export type ContactUpsertWithoutMessagesReceivedInput = {
+  update: ContactUpdateWithoutMessagesReceivedDataInput,
+  create: ContactCreateWithoutMessagesReceivedInput
+};
+
+export type MessageUpsertWithWhereUniqueWithoutFromInput = {
+  where: MessageWhereUniqueInput,
+  update: MessageUpdateWithoutFromDataInput,
+  create: MessageCreateWithoutFromInput
+};
+
+export type MessageScalarWhereInput = {
+  id?: ID_Input,
+  id_not?: ID_Input,
+  id_in?: ID_Input[],
+  id_not_in?: ID_Input[],
+  id_lt?: ID_Input,
+  id_lte?: ID_Input,
+  id_gt?: ID_Input,
+  id_gte?: ID_Input,
+  id_contains?: ID_Input,
+  id_not_contains?: ID_Input,
+  id_starts_with?: ID_Input,
+  id_not_starts_with?: ID_Input,
+  id_ends_with?: ID_Input,
+  id_not_ends_with?: ID_Input,
+  date?: DateTimeInput,
+  date_not?: DateTimeInput,
+  date_in?: DateTimeInput[],
+  date_not_in?: DateTimeInput[],
+  date_lt?: DateTimeInput,
+  date_lte?: DateTimeInput,
+  date_gt?: DateTimeInput,
+  date_gte?: DateTimeInput,
+  text?: String,
+  text_not?: String,
+  text_in?: String[],
+  text_not_in?: String[],
+  text_lt?: String,
+  text_lte?: String,
+  text_gt?: String,
+  text_gte?: String,
+  text_contains?: String,
+  text_not_contains?: String,
+  text_starts_with?: String,
+  text_not_starts_with?: String,
+  text_ends_with?: String,
+  text_not_ends_with?: String,
+  AND?: MessageScalarWhereInput[],
+  OR?: MessageScalarWhereInput[],
+  NOT?: MessageScalarWhereInput[]
+};
+
+export type MessageUpdateManyWithWhereNestedInput = {
+  where: MessageScalarWhereInput,
+  data: MessageUpdateManyDataInput
+};
+
+export type MessageUpdateManyDataInput = {
+  date?: DateTimeInput,
+  text?: String
+};
+
+export type MessageUpdateManyWithoutToInput = {
+  create?: MessageCreateWithoutToInput[],
+  delete?: MessageWhereUniqueInput[],
+  connect?: MessageWhereUniqueInput[],
+  set?: MessageWhereUniqueInput[],
+  disconnect?: MessageWhereUniqueInput[],
+  update?: MessageUpdateWithWhereUniqueWithoutToInput[],
+  upsert?: MessageUpsertWithWhereUniqueWithoutToInput[],
+  deleteMany?: MessageScalarWhereInput[],
+  updateMany?: MessageUpdateManyWithWhereNestedInput[]
+};
+
+export type MessageUpdateWithWhereUniqueWithoutToInput = {
+  where: MessageWhereUniqueInput,
+  data: MessageUpdateWithoutToDataInput
+};
+
+export type MessageUpdateWithoutToDataInput = {
+  date?: DateTimeInput,
+  text?: String,
+  from?: ContactUpdateOneRequiredWithoutMessagesSentInput
+};
+
+export type ContactUpdateOneRequiredWithoutMessagesSentInput = {
+  create?: ContactCreateWithoutMessagesSentInput,
+  update?: ContactUpdateWithoutMessagesSentDataInput,
+  upsert?: ContactUpsertWithoutMessagesSentInput,
+  connect?: ContactWhereUniqueInput
+};
+
+export type ContactUpdateWithoutMessagesSentDataInput = {
+  username?: String,
+  phone?: String,
+  name?: String,
+  avatar?: String,
+  cover?: String,
+  messagesReceived?: MessageUpdateManyWithoutToInput
+};
+
+export type ContactUpsertWithoutMessagesSentInput = {
+  update: ContactUpdateWithoutMessagesSentDataInput,
+  create: ContactCreateWithoutMessagesSentInput
+};
+
+export type MessageUpsertWithWhereUniqueWithoutToInput = {
+  where: MessageWhereUniqueInput,
+  update: MessageUpdateWithoutToDataInput,
+  create: MessageCreateWithoutToInput
 };
 
 export type ContactUpdateManyMutationInput = {
@@ -473,13 +709,8 @@ export type MessageCreateInput = {
   id?: ID_Input,
   date: DateTimeInput,
   text: String,
-  from: ContactCreateOneInput,
-  to: ContactCreateOneInput
-};
-
-export type ContactCreateOneInput = {
-  create?: ContactCreateInput,
-  connect?: ContactWhereUniqueInput
+  from: ContactCreateOneWithoutMessagesSentInput,
+  to: ContactCreateOneWithoutMessagesReceivedInput
 };
 
 export type HistoryUpdateInput = {
@@ -497,28 +728,8 @@ export type MessageUpdateOneRequiredInput = {
 export type MessageUpdateDataInput = {
   date?: DateTimeInput,
   text?: String,
-  from?: ContactUpdateOneRequiredInput,
-  to?: ContactUpdateOneRequiredInput
-};
-
-export type ContactUpdateOneRequiredInput = {
-  create?: ContactCreateInput,
-  update?: ContactUpdateDataInput,
-  upsert?: ContactUpsertNestedInput,
-  connect?: ContactWhereUniqueInput
-};
-
-export type ContactUpdateDataInput = {
-  username?: String,
-  phone?: String,
-  name?: String,
-  avatar?: String,
-  cover?: String
-};
-
-export type ContactUpsertNestedInput = {
-  update: ContactUpdateDataInput,
-  create: ContactCreateInput
+  from?: ContactUpdateOneRequiredWithoutMessagesSentInput,
+  to?: ContactUpdateOneRequiredWithoutMessagesReceivedInput
 };
 
 export type MessageUpsertNestedInput = {
@@ -529,8 +740,8 @@ export type MessageUpsertNestedInput = {
 export type MessageUpdateInput = {
   date?: DateTimeInput,
   text?: String,
-  from?: ContactUpdateOneRequiredInput,
-  to?: ContactUpdateOneRequiredInput
+  from?: ContactUpdateOneRequiredWithoutMessagesSentInput,
+  to?: ContactUpdateOneRequiredWithoutMessagesReceivedInput
 };
 
 export type MessageUpdateManyMutationInput = {
@@ -654,6 +865,8 @@ export interface Contact {
   name: String;
   avatar: String;
   cover: String;
+  createdAt: DateTimeOutput;
+  updatedAt: DateTimeOutput;
 }
 
 export interface ContactPromise extends Promise<Contact>, Fragmentable {
@@ -663,6 +876,26 @@ export interface ContactPromise extends Promise<Contact>, Fragmentable {
   name: () => Promise<String>;
   avatar: () => Promise<String>;
   cover: () => Promise<String>;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
+  messagesSent: <T: FragmentableArray<Message>>(args?: {
+    where?: MessageWhereInput,
+    orderBy?: MessageOrderByInput,
+    skip?: Int,
+    after?: String,
+    before?: String,
+    first?: Int,
+    last?: Int
+  }) => T;
+  messagesReceived: <T: FragmentableArray<Message>>(args?: {
+    where?: MessageWhereInput,
+    orderBy?: MessageOrderByInput,
+    skip?: Int,
+    after?: String,
+    before?: String,
+    first?: Int,
+    last?: Int
+  }) => T;
 }
 
 export interface ContactSubscription
@@ -674,6 +907,26 @@ export interface ContactSubscription
   name: () => Promise<AsyncIterator<String>>;
   avatar: () => Promise<AsyncIterator<String>>;
   cover: () => Promise<AsyncIterator<String>>;
+  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  messagesSent: <T: Promise<AsyncIterator<MessageSubscription>>>(args?: {
+    where?: MessageWhereInput,
+    orderBy?: MessageOrderByInput,
+    skip?: Int,
+    after?: String,
+    before?: String,
+    first?: Int,
+    last?: Int
+  }) => T;
+  messagesReceived: <T: Promise<AsyncIterator<MessageSubscription>>>(args?: {
+    where?: MessageWhereInput,
+    orderBy?: MessageOrderByInput,
+    skip?: Int,
+    after?: String,
+    before?: String,
+    first?: Int,
+    last?: Int
+  }) => T;
 }
 
 export interface ContactNullablePromise
@@ -685,6 +938,60 @@ export interface ContactNullablePromise
   name: () => Promise<String>;
   avatar: () => Promise<String>;
   cover: () => Promise<String>;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
+  messagesSent: <T: FragmentableArray<Message>>(args?: {
+    where?: MessageWhereInput,
+    orderBy?: MessageOrderByInput,
+    skip?: Int,
+    after?: String,
+    before?: String,
+    first?: Int,
+    last?: Int
+  }) => T;
+  messagesReceived: <T: FragmentableArray<Message>>(args?: {
+    where?: MessageWhereInput,
+    orderBy?: MessageOrderByInput,
+    skip?: Int,
+    after?: String,
+    before?: String,
+    first?: Int,
+    last?: Int
+  }) => T;
+}
+
+export interface Message {
+  id: ID_Output;
+  date: DateTimeOutput;
+  text: String;
+}
+
+export interface MessagePromise extends Promise<Message>, Fragmentable {
+  id: () => Promise<ID_Output>;
+  date: () => Promise<DateTimeOutput>;
+  text: () => Promise<String>;
+  from: <T: ContactPromise>() => T;
+  to: <T: ContactPromise>() => T;
+}
+
+export interface MessageSubscription
+  extends Promise<AsyncIterator<Message>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  date: () => Promise<AsyncIterator<DateTimeOutput>>;
+  text: () => Promise<AsyncIterator<String>>;
+  from: <T: ContactSubscription>() => T;
+  to: <T: ContactSubscription>() => T;
+}
+
+export interface MessageNullablePromise
+  extends Promise<Message | null>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  date: () => Promise<DateTimeOutput>;
+  text: () => Promise<String>;
+  from: <T: ContactPromise>() => T;
+  to: <T: ContactPromise>() => T;
 }
 
 export interface ContactConnection {
@@ -788,40 +1095,6 @@ export interface HistoryNullablePromise
   id: () => Promise<ID_Output>;
   start: <T: MessagePromise>() => T;
   end: <T: MessagePromise>() => T;
-}
-
-export interface Message {
-  id: ID_Output;
-  date: DateTimeOutput;
-  text: String;
-}
-
-export interface MessagePromise extends Promise<Message>, Fragmentable {
-  id: () => Promise<ID_Output>;
-  date: () => Promise<DateTimeOutput>;
-  text: () => Promise<String>;
-  from: <T: ContactPromise>() => T;
-  to: <T: ContactPromise>() => T;
-}
-
-export interface MessageSubscription
-  extends Promise<AsyncIterator<Message>>,
-    Fragmentable {
-  id: () => Promise<AsyncIterator<ID_Output>>;
-  date: () => Promise<AsyncIterator<DateTimeOutput>>;
-  text: () => Promise<AsyncIterator<String>>;
-  from: <T: ContactSubscription>() => T;
-  to: <T: ContactSubscription>() => T;
-}
-
-export interface MessageNullablePromise
-  extends Promise<Message | null>,
-    Fragmentable {
-  id: () => Promise<ID_Output>;
-  date: () => Promise<DateTimeOutput>;
-  text: () => Promise<String>;
-  from: <T: ContactPromise>() => T;
-  to: <T: ContactPromise>() => T;
 }
 
 export interface HistoryConnection {
@@ -1083,6 +1356,8 @@ export interface ContactPreviousValues {
   name: String;
   avatar: String;
   cover: String;
+  createdAt: DateTimeOutput;
+  updatedAt: DateTimeOutput;
 }
 
 export interface ContactPreviousValuesPromise
@@ -1094,6 +1369,8 @@ export interface ContactPreviousValuesPromise
   name: () => Promise<String>;
   avatar: () => Promise<String>;
   cover: () => Promise<String>;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
 }
 
 export interface ContactPreviousValuesSubscription
@@ -1105,6 +1382,8 @@ export interface ContactPreviousValuesSubscription
   name: () => Promise<AsyncIterator<String>>;
   avatar: () => Promise<AsyncIterator<String>>;
   cover: () => Promise<AsyncIterator<String>>;
+  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
 }
 
 export interface HistorySubscriptionPayload {
@@ -1248,16 +1527,6 @@ The `String` scalar type represents textual data, represented as UTF-8 character
 export type String = string;
 
 /*
-The `Int` scalar type represents non-fractional signed whole numeric values. Int can represent values between -(2^31) and 2^31 - 1.
-*/
-export type Int = number;
-
-/*
-The `Boolean` scalar type represents `true` or `false`.
-*/
-export type Boolean = boolean;
-
-/*
 DateTime scalar input type, allowing Date
 */
 export type DateTimeInput = Date | string;
@@ -1266,6 +1535,16 @@ export type DateTimeInput = Date | string;
 DateTime scalar output type, which is always a string
 */
 export type DateTimeOutput = string;
+
+/*
+The `Int` scalar type represents non-fractional signed whole numeric values. Int can represent values between -(2^31) and 2^31 - 1.
+*/
+export type Int = number;
+
+/*
+The `Boolean` scalar type represents `true` or `false`.
+*/
+export type Boolean = boolean;
 
 export type Long = string;
 

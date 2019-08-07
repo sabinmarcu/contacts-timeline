@@ -2,7 +2,7 @@
 
 import { entities } from '@ct/generators';
 
-import { prisma, type Contact } from './prisma';
+import { prisma, type Contact } from '@ct/prisma';
 
 const { makeContact, makeMessage } = entities;
 
@@ -12,7 +12,7 @@ const maxConversations = 3;
 (async () => {
   const contacts = await Promise.all((new Array(contactsNumber))
     .fill(0)
-    .map(() => prisma.createContact(makeContact(false))));
+    .map(() => prisma.createContact(makeContact())));
 
   await contacts.forEach(async (
     contact: Contact,

@@ -23,12 +23,12 @@ export const makeContact = (withId: boolean = false): Contact => ({
   ...(withId ? { id: `${parseInt(Math.random() * 100, 10)}` } : {}),
 });
 
-export const makeMessage = (): Message => ({
-  id: lorem.slug(),
+export const makeMessage = (withId: boolean = false): Message => ({
   text: lorem.text(),
   date: (
     Math.random() >= 0.5
       ? date.past
       : date.future
   )(),
+  ...(withId ? { id: `${parseInt(Math.random() * 100, 10)}` } : {}),
 });

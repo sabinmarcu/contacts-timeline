@@ -26,6 +26,10 @@ type Contact {
   name: String!
   avatar: String!
   cover: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  messagesSent(where: MessageWhereInput, orderBy: MessageOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Message!]
+  messagesReceived(where: MessageWhereInput, orderBy: MessageOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Message!]
 }
 
 type ContactConnection {
@@ -41,11 +45,38 @@ input ContactCreateInput {
   name: String!
   avatar: String!
   cover: String!
+  messagesSent: MessageCreateManyWithoutFromInput
+  messagesReceived: MessageCreateManyWithoutToInput
 }
 
-input ContactCreateOneInput {
-  create: ContactCreateInput
+input ContactCreateOneWithoutMessagesReceivedInput {
+  create: ContactCreateWithoutMessagesReceivedInput
   connect: ContactWhereUniqueInput
+}
+
+input ContactCreateOneWithoutMessagesSentInput {
+  create: ContactCreateWithoutMessagesSentInput
+  connect: ContactWhereUniqueInput
+}
+
+input ContactCreateWithoutMessagesReceivedInput {
+  id: ID
+  username: String!
+  phone: String!
+  name: String!
+  avatar: String!
+  cover: String!
+  messagesSent: MessageCreateManyWithoutFromInput
+}
+
+input ContactCreateWithoutMessagesSentInput {
+  id: ID
+  username: String!
+  phone: String!
+  name: String!
+  avatar: String!
+  cover: String!
+  messagesReceived: MessageCreateManyWithoutToInput
 }
 
 type ContactEdge {
@@ -66,6 +97,10 @@ enum ContactOrderByInput {
   avatar_DESC
   cover_ASC
   cover_DESC
+  createdAt_ASC
+  createdAt_DESC
+  updatedAt_ASC
+  updatedAt_DESC
 }
 
 type ContactPreviousValues {
@@ -75,6 +110,8 @@ type ContactPreviousValues {
   name: String!
   avatar: String!
   cover: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
 type ContactSubscriptionPayload {
@@ -95,20 +132,14 @@ input ContactSubscriptionWhereInput {
   NOT: [ContactSubscriptionWhereInput!]
 }
 
-input ContactUpdateDataInput {
-  username: String
-  phone: String
-  name: String
-  avatar: String
-  cover: String
-}
-
 input ContactUpdateInput {
   username: String
   phone: String
   name: String
   avatar: String
   cover: String
+  messagesSent: MessageUpdateManyWithoutFromInput
+  messagesReceived: MessageUpdateManyWithoutToInput
 }
 
 input ContactUpdateManyMutationInput {
@@ -119,16 +150,46 @@ input ContactUpdateManyMutationInput {
   cover: String
 }
 
-input ContactUpdateOneRequiredInput {
-  create: ContactCreateInput
-  update: ContactUpdateDataInput
-  upsert: ContactUpsertNestedInput
+input ContactUpdateOneRequiredWithoutMessagesReceivedInput {
+  create: ContactCreateWithoutMessagesReceivedInput
+  update: ContactUpdateWithoutMessagesReceivedDataInput
+  upsert: ContactUpsertWithoutMessagesReceivedInput
   connect: ContactWhereUniqueInput
 }
 
-input ContactUpsertNestedInput {
-  update: ContactUpdateDataInput!
-  create: ContactCreateInput!
+input ContactUpdateOneRequiredWithoutMessagesSentInput {
+  create: ContactCreateWithoutMessagesSentInput
+  update: ContactUpdateWithoutMessagesSentDataInput
+  upsert: ContactUpsertWithoutMessagesSentInput
+  connect: ContactWhereUniqueInput
+}
+
+input ContactUpdateWithoutMessagesReceivedDataInput {
+  username: String
+  phone: String
+  name: String
+  avatar: String
+  cover: String
+  messagesSent: MessageUpdateManyWithoutFromInput
+}
+
+input ContactUpdateWithoutMessagesSentDataInput {
+  username: String
+  phone: String
+  name: String
+  avatar: String
+  cover: String
+  messagesReceived: MessageUpdateManyWithoutToInput
+}
+
+input ContactUpsertWithoutMessagesReceivedInput {
+  update: ContactUpdateWithoutMessagesReceivedDataInput!
+  create: ContactCreateWithoutMessagesReceivedInput!
+}
+
+input ContactUpsertWithoutMessagesSentInput {
+  update: ContactUpdateWithoutMessagesSentDataInput!
+  create: ContactCreateWithoutMessagesSentInput!
 }
 
 input ContactWhereInput {
@@ -216,6 +277,28 @@ input ContactWhereInput {
   cover_not_starts_with: String
   cover_ends_with: String
   cover_not_ends_with: String
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+  updatedAt_not: DateTime
+  updatedAt_in: [DateTime!]
+  updatedAt_not_in: [DateTime!]
+  updatedAt_lt: DateTime
+  updatedAt_lte: DateTime
+  updatedAt_gt: DateTime
+  updatedAt_gte: DateTime
+  messagesSent_every: MessageWhereInput
+  messagesSent_some: MessageWhereInput
+  messagesSent_none: MessageWhereInput
+  messagesReceived_every: MessageWhereInput
+  messagesReceived_some: MessageWhereInput
+  messagesReceived_none: MessageWhereInput
   AND: [ContactWhereInput!]
   OR: [ContactWhereInput!]
   NOT: [ContactWhereInput!]
@@ -382,13 +465,37 @@ input MessageCreateInput {
   id: ID
   date: DateTime!
   text: String!
-  from: ContactCreateOneInput!
-  to: ContactCreateOneInput!
+  from: ContactCreateOneWithoutMessagesSentInput!
+  to: ContactCreateOneWithoutMessagesReceivedInput!
+}
+
+input MessageCreateManyWithoutFromInput {
+  create: [MessageCreateWithoutFromInput!]
+  connect: [MessageWhereUniqueInput!]
+}
+
+input MessageCreateManyWithoutToInput {
+  create: [MessageCreateWithoutToInput!]
+  connect: [MessageWhereUniqueInput!]
 }
 
 input MessageCreateOneInput {
   create: MessageCreateInput
   connect: MessageWhereUniqueInput
+}
+
+input MessageCreateWithoutFromInput {
+  id: ID
+  date: DateTime!
+  text: String!
+  to: ContactCreateOneWithoutMessagesReceivedInput!
+}
+
+input MessageCreateWithoutToInput {
+  id: ID
+  date: DateTime!
+  text: String!
+  from: ContactCreateOneWithoutMessagesSentInput!
 }
 
 type MessageEdge {
@@ -409,6 +516,48 @@ type MessagePreviousValues {
   id: ID!
   date: DateTime!
   text: String!
+}
+
+input MessageScalarWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  date: DateTime
+  date_not: DateTime
+  date_in: [DateTime!]
+  date_not_in: [DateTime!]
+  date_lt: DateTime
+  date_lte: DateTime
+  date_gt: DateTime
+  date_gte: DateTime
+  text: String
+  text_not: String
+  text_in: [String!]
+  text_not_in: [String!]
+  text_lt: String
+  text_lte: String
+  text_gt: String
+  text_gte: String
+  text_contains: String
+  text_not_contains: String
+  text_starts_with: String
+  text_not_starts_with: String
+  text_ends_with: String
+  text_not_ends_with: String
+  AND: [MessageScalarWhereInput!]
+  OR: [MessageScalarWhereInput!]
+  NOT: [MessageScalarWhereInput!]
 }
 
 type MessageSubscriptionPayload {
@@ -432,20 +581,54 @@ input MessageSubscriptionWhereInput {
 input MessageUpdateDataInput {
   date: DateTime
   text: String
-  from: ContactUpdateOneRequiredInput
-  to: ContactUpdateOneRequiredInput
+  from: ContactUpdateOneRequiredWithoutMessagesSentInput
+  to: ContactUpdateOneRequiredWithoutMessagesReceivedInput
 }
 
 input MessageUpdateInput {
   date: DateTime
   text: String
-  from: ContactUpdateOneRequiredInput
-  to: ContactUpdateOneRequiredInput
+  from: ContactUpdateOneRequiredWithoutMessagesSentInput
+  to: ContactUpdateOneRequiredWithoutMessagesReceivedInput
+}
+
+input MessageUpdateManyDataInput {
+  date: DateTime
+  text: String
 }
 
 input MessageUpdateManyMutationInput {
   date: DateTime
   text: String
+}
+
+input MessageUpdateManyWithoutFromInput {
+  create: [MessageCreateWithoutFromInput!]
+  delete: [MessageWhereUniqueInput!]
+  connect: [MessageWhereUniqueInput!]
+  set: [MessageWhereUniqueInput!]
+  disconnect: [MessageWhereUniqueInput!]
+  update: [MessageUpdateWithWhereUniqueWithoutFromInput!]
+  upsert: [MessageUpsertWithWhereUniqueWithoutFromInput!]
+  deleteMany: [MessageScalarWhereInput!]
+  updateMany: [MessageUpdateManyWithWhereNestedInput!]
+}
+
+input MessageUpdateManyWithoutToInput {
+  create: [MessageCreateWithoutToInput!]
+  delete: [MessageWhereUniqueInput!]
+  connect: [MessageWhereUniqueInput!]
+  set: [MessageWhereUniqueInput!]
+  disconnect: [MessageWhereUniqueInput!]
+  update: [MessageUpdateWithWhereUniqueWithoutToInput!]
+  upsert: [MessageUpsertWithWhereUniqueWithoutToInput!]
+  deleteMany: [MessageScalarWhereInput!]
+  updateMany: [MessageUpdateManyWithWhereNestedInput!]
+}
+
+input MessageUpdateManyWithWhereNestedInput {
+  where: MessageScalarWhereInput!
+  data: MessageUpdateManyDataInput!
 }
 
 input MessageUpdateOneRequiredInput {
@@ -455,9 +638,43 @@ input MessageUpdateOneRequiredInput {
   connect: MessageWhereUniqueInput
 }
 
+input MessageUpdateWithoutFromDataInput {
+  date: DateTime
+  text: String
+  to: ContactUpdateOneRequiredWithoutMessagesReceivedInput
+}
+
+input MessageUpdateWithoutToDataInput {
+  date: DateTime
+  text: String
+  from: ContactUpdateOneRequiredWithoutMessagesSentInput
+}
+
+input MessageUpdateWithWhereUniqueWithoutFromInput {
+  where: MessageWhereUniqueInput!
+  data: MessageUpdateWithoutFromDataInput!
+}
+
+input MessageUpdateWithWhereUniqueWithoutToInput {
+  where: MessageWhereUniqueInput!
+  data: MessageUpdateWithoutToDataInput!
+}
+
 input MessageUpsertNestedInput {
   update: MessageUpdateDataInput!
   create: MessageCreateInput!
+}
+
+input MessageUpsertWithWhereUniqueWithoutFromInput {
+  where: MessageWhereUniqueInput!
+  update: MessageUpdateWithoutFromDataInput!
+  create: MessageCreateWithoutFromInput!
+}
+
+input MessageUpsertWithWhereUniqueWithoutToInput {
+  where: MessageWhereUniqueInput!
+  update: MessageUpdateWithoutToDataInput!
+  create: MessageCreateWithoutToInput!
 }
 
 input MessageWhereInput {
