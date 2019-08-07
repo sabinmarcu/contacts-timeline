@@ -7,11 +7,13 @@ import {
   useThemeProvider,
   ThemeSwitcher,
 } from '@ct/layout';
+import { hot } from 'react-hot-loader';
 import { client } from './graphql';
 
 import { ContactsRoute } from './routes/home';
 
-function App() {
+// eslint-disable-next-line import/no-mutable-exports
+let App = () => {
   const context = useThemeProvider();
   return (
     <ThemeProvider value={context}>
@@ -21,6 +23,10 @@ function App() {
       </ApolloProvider>
     </ThemeProvider>
   );
+};
+
+if (process.env.NODE_ENV !== 'production') {
+  App = hot(module)(App);
 }
 
 export default App;
