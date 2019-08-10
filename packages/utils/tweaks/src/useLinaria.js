@@ -1,28 +1,27 @@
-/* eslint-disable no-param-reassign,import/no-extraneous-dependencies */
+/* eslint-disable import/no-extraneous-dependencies */
+/* eslint-disable no-param-reassign */
 
-const { resolve } = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const {
   tweakBabelLoaders,
   tweakCssLoaders,
   getBabelLoaderOptions,
+  setProcValue,
+  addBabelPreset,
 } = require('./utils');
 
-const DEV = process.env.NODE_ENV !== 'production';
-
-module.exports = (config) => {
+module.exports = (config, { DEV }) => {
   tweakBabelLoaders(config, (babelLoader) => {
     const babelLoaderVariables = getBabelLoaderOptions(babelLoader);
-    if (!DEV && babelLoaderVariables.options) {
-      delete babelLoaderVariables.options.cacheDirectory;
-      delete babelLoaderVariables.options.cacheCompression;
-      delete babelLoaderVariables.options.cacheIdentifier;
-    }
+    addBabelPreset(babelLoaderVariables, 'linaria/babel');
+
+    delete babelLoaderVariables.options.cacheIdentifier;
     const linariaLoader = {
       loader: 'linaria/loader',
       options: {
         sourceMap: DEV,
         cacheDirectory: 'src/.linaria_cache',
+        displayName: true,
         babelOptions: {
           ...babelLoaderVariables.options,
         },
@@ -32,20 +31,11 @@ module.exports = (config) => {
     delete linariaLoader.options.babelOptions.cacheCompression;
     delete linariaLoader.options.babelOptions.cacheIdentifier;
     delete linariaLoader.options.babelOptions.customize;
+
     babelLoader.use = [
-      babelLoaderVariables,
+      ...babelLoader.use,
       linariaLoader,
     ];
-    delete babelLoader.loader;
-    delete babelLoader.options;
-    if (babelLoader.include) {
-      babelLoader.include = [
-        ...(babelLoader.include.substr ? [babelLoader.include] : babelLoader.include),
-        resolve(__dirname, '../../../../apps'),
-        resolve(__dirname, '../../../../packages'),
-        /\.jsx$/g,
-      ];
-    }
   });
 
   tweakCssLoaders(config, ({ use }) => {
@@ -69,4 +59,6 @@ module.exports = (config) => {
   config.plugins.push(new MiniCssExtractPlugin({
     filename: 'styles.css',
   }));
+
+  setProcValue(config, { REACT_APP_STYLER: 'linaria' });
 };

@@ -1,10 +1,7 @@
 // @flow
 /* eslint-disable react/require-default-props */
 
-import React, {
-  forwardRef,
-  type Ref,
-} from 'react';
+import React from 'react';
 import {
   Card,
   CardHeader,

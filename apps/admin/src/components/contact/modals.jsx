@@ -12,6 +12,7 @@ import {
   DialogActions,
   Button,
 } from '@material-ui/core';
+import { styled } from 'linaria/react';
 import {
   type Contact,
 } from '@ct/prisma';

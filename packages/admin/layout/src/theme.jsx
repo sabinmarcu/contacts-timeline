@@ -16,9 +16,7 @@ import {
   type ThemeNamesType,
 } from '@ct/themes';
 
-import {
-  styled,
-} from 'linaria/react';
+import { styled } from 'linaria/react';
 
 import {
   ThemeProvider as MUIThemeProvider,

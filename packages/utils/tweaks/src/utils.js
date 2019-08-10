@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 /* eslint-disable no-underscore-dangle */
 
 let _rules = null;
@@ -47,7 +48,54 @@ const getBabelLoaderOptions = babelLoader => (babelLoader.loader && babelLoader.
   });
 
 const compose = (config, mutators, extraOptions) => {
-  mutators.forEach((mutator, index) => console.log('Running', index) || mutator(config, extraOptions));
+  mutators.forEach(mutator => mutator && mutator(config, extraOptions));
+};
+
+const getReplacePlugin = config => config.plugins.find(({ replacements }) => !!replacements);
+
+const getDefinitionsPlugin = config => config.plugins.find(({ definitions }) => !!definitions);
+
+
+const setProcValue = (config, mappings) => {
+  const replacePlugin = getReplacePlugin(config);
+  if (replacePlugin) {
+    replacePlugin.replacements = {
+      ...replacePlugin.replacements,
+      ...mappings,
+    };
+  }
+  const definitionsPlugin = getDefinitionsPlugin(config);
+  if (definitionsPlugin) {
+    definitionsPlugin.definitions['process.env'] = {
+      ...definitionsPlugin.definitions['process.env'],
+      ...Object.keys(mappings)
+        .reduce((prev, key) => ({ ...prev, [key]: JSON.stringify(mappings[key]) }), {}),
+    };
+  }
+  process.env = {
+    ...process.env,
+    ...mappings,
+  };
+};
+
+const addBabelPlugin = (babelLoaderVariables, plugin) => {
+  if (!babelLoaderVariables.options.plugins) {
+    return;
+  }
+  babelLoaderVariables.options.plugins = [
+    ...babelLoaderVariables.options.plugins,
+    plugin,
+  ];
+};
+
+const addBabelPreset = (babelLoaderVariables, preset) => {
+  if (!babelLoaderVariables.options.presets) {
+    return;
+  }
+  babelLoaderVariables.options.presets = [
+    ...babelLoaderVariables.options.presets,
+    preset,
+  ];
 };
 
 module.exports = {
@@ -57,5 +105,9 @@ module.exports = {
   tweakBabelLoaders,
   tweakCssLoaders,
   getBabelLoaderOptions,
+  getReplacePlugin,
+  setProcValue,
+  addBabelPlugin,
+  addBabelPreset,
   compose,
 };

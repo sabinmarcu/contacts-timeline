@@ -1,0 +1,14 @@
+{
+  "name": "@ct/shims",
+  "version": "0.1.0",
+  "description": "> TODO: description",
+  "author": "Sabin Marcu <sabinmarcu@gmail.com>",
+  "homepage": "https://github.com/sabinmarcu/contacts-timeline#readme",
+  "license": "ISC",
+  "main": "src/index.js",
+  "dependencies": {
+    "@emotion/styled": "^10.0.15",
+    "emotion": "^10.0.14",
+    "linaria": "^1.3.1"
+  }
+}

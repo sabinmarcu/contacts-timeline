@@ -231,48 +231,50 @@ export const FlippableComponent = ({
     [autoSize, autoFaces, autoBackFace, backSize, sideState, init, simple, wrapperSize],
   );
   return (
-    <div style={{
-      perspective: 800,
-      perspectiveOrigin: 'top center',
-      display: 'flex',
-      flex: 1,
-    }}
-    >
-      <Measure bounds onResize={wrapperSizeSetter}>
-        {({ measureRef: parentMeasureRef }) => (
-          <ParentRender
-            ref={parentMeasureRef}
-            style={parentStyles}
-          >
-            <Measure bounds onResize={frontSizeSetter}>
-              {({ measureRef }) => (
-                <Side
-                  ref={measureRef}
-                  style={frontSideStyles}
-                  active={sideState === Sides.front}
-                  animationDuration={animationDuration}
-                >
-                  {frontFace}
-                </Side>
-              )}
-            </Measure>
-            <Measure bounds onResize={backSizeSetter}>
-              {({ measureRef }) => (
-                <Side
-                  ref={measureRef}
-                  style={backSideStyles}
-                  active={sideState === Sides.back}
-                  animationDuration={animationDuration}
-                >
-                  {backFace}
-                </Side>
-              )}
-            </Measure>
-          </ParentRender>
-        )}
-      </Measure>
+    <>
+      <div style={{
+        perspective: 800,
+        perspectiveOrigin: 'top center',
+        display: 'flex',
+        flex: 1,
+      }}
+      >
+        <Measure bounds onResize={wrapperSizeSetter}>
+          {({ measureRef: parentMeasureRef }) => (
+            <ParentRender
+              ref={parentMeasureRef}
+              style={parentStyles}
+            >
+              <Measure bounds onResize={frontSizeSetter}>
+                {({ measureRef }) => (
+                  <Side
+                    ref={measureRef}
+                    style={frontSideStyles}
+                    active={sideState === Sides.front}
+                    animationDuration={animationDuration}
+                  >
+                    {frontFace}
+                  </Side>
+                )}
+              </Measure>
+              <Measure bounds onResize={backSizeSetter}>
+                {({ measureRef }) => (
+                  <Side
+                    ref={measureRef}
+                    style={backSideStyles}
+                    active={sideState === Sides.back}
+                    animationDuration={animationDuration}
+                  >
+                    {backFace}
+                  </Side>
+                )}
+              </Measure>
+            </ParentRender>
+          )}
+        </Measure>
+      </div>
       {children}
-    </div>
+    </>
   );
 };
 

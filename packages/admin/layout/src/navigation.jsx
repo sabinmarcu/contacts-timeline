@@ -1,4 +1,4 @@
- // @flow
+// @flow
 
 import React, {
   type Element,
@@ -22,12 +22,12 @@ export type Props = {
 export const Navigation = ({
   left,
   right,
-  title
+  title,
 }: Props) => (
   <AppBar position="static">
     <StyledToolbar>
       {left}
-      <Typography variant="h6" color="default">
+      <Typography variant="h6" color="initial">
         {title || 'Awesome Stuff'}
       </Typography>
       {right}

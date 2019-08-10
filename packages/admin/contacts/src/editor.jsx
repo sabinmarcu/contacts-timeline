@@ -235,7 +235,7 @@ const EditorComponent = ({
       if (onSave) {
         onSave(rawData);
         resetData();
-      }   
+      }
     },
     [onSave, rawData],
   );
@@ -244,8 +244,14 @@ const EditorComponent = ({
       <CardHeader title={`${contact && contact.id ? 'Edit' : 'Create'} Contact`} />
       <CardContent className={styles.media}>
         {Object.keys(validatorsSet).map(key => (
-          <FormControl error={fields[key].isDirty && !fields[key].isValid} fullWidth>
-            <InputLabel>{fields[key].label}: </InputLabel>
+          <FormControl
+            key={fields[key].label}
+            error={fields[key].isDirty && !fields[key].isValid}
+            fullWidth
+          >
+            <InputLabel>
+              {`${fields[key].label}: `}
+            </InputLabel>
             <Input
               placeholder={`Your ${fields[key].label}`}
               fullWidth

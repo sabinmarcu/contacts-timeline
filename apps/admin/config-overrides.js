@@ -13,8 +13,6 @@ const {
 
 module.exports = {
   webpack: override(
-    addBabelPreset('@babel/flow'),
-    addBabelPreset('linaria/babel'),
     tweakWebConfig,
   ),
   devServer: overrideDevServer(

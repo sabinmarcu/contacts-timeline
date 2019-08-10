@@ -2,14 +2,19 @@
 
 const { resolve } = require('path');
 
-const { compose } = require('./utils');
+const { compose, getReplacePlugin } = require('./utils');
 
 const useBabelRc = require('./useBabelRc');
+const useBabelLoader = require('./useBabelLoader');
 const useGraphQL = require('./useGraphQL');
 const useLinaria = require('./useLinaria');
 const useHotModule = require('./useHotModule');
+const useEmotion = require('./useEmotion');
+const useReplaceLinariaImports = require('./useReplaceLinariaImports');
 
-module.exports = (config, isStorybook = false) => {
+const DEV = process.env.NODE_ENV !== 'production';
+
+module.exports = (config, env, isStorybook = false) => {
   console.log('ENV: ', process.env.NODE_ENV);
   console.log(
     'REACT VARS: ',
@@ -21,13 +26,20 @@ module.exports = (config, isStorybook = false) => {
   compose(
     config,
     [
+      useBabelLoader,
       useBabelRc,
+      DEV 
+          ? useEmotion 
+          : useLinaria,
+      useReplaceLinariaImports,
       useGraphQL,
-      useLinaria,
       useHotModule,
     ],
-    { isStorybook }
-  )
+    { 
+      isStorybook, 
+      DEV,
+    }
+  );
 
   return config;
 };
