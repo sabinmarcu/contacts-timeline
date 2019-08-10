@@ -1,16 +1,18 @@
 import React, {
-  useCallback,
+  useCallback, useEffect,
 } from 'react';
 import {
   Flippable, FlipContext, useFlippableProvider,
 } from '@ct/ui';
 import { Preview, Editor } from '@ct/contacts';
 import { useMutation } from '@apollo/react-hooks';
-import {
-  useTheme,
-} from '@material-ui/styles';
+
 import { useFlow } from './useFlow';
-import { AlertDialog } from './modals';
+import {
+  AlertDialog,
+  ProgressDialog,
+  StatusDialog,
+} from './modals';
 
 // $FlowFixMe
 import UpdateContact from '../../graphql/contacts/update.gql';
@@ -22,7 +24,7 @@ export const ContactEditor = ({ contact }) => {
   const {
     Steps,
     step,
-    // setStep,
+    setStep,
     prevStep,
     nextStep,
   } = useFlow([
@@ -33,9 +35,8 @@ export const ContactEditor = ({ contact }) => {
     'error',
   ]);
   const [updateContact] = useMutation(UpdateContact);
-  const [removeContact] = useMutation(RemoveContact);
+  const [removeContact, { loading, error }] = useMutation(RemoveContact);
   const { setter: toggleSide } = context;
-  const theme = useTheme();
   const saveContact = useCallback(
     (data) => {
       const updateObject = { ...contact, ...data };
@@ -44,40 +45,49 @@ export const ContactEditor = ({ contact }) => {
     },
     [toggleSide, updateContact, contact],
   );
-  const removeContactHandle = useCallback(
-    async () => {
-    //   swal.queue([{
-    //     title: contact.name,
-    //     text: `Are you sure you want to remove this contact?`,
-    //     confirmButtonText: "Yes",
-    //     cancelButtonText: "No",
-    //     focusCancel: true,
-    //     showCancelButton: true,
-    //     showLoaderOnConfirm: true,
-    //     confirmButtonColor: theme.palette.primary.main,
-    //     cancelButtonColor: theme.palette.secondary.main,
-    //     imageUrl: contact.avatar,
-    //     preConfirm: () => new Promise((accept, reject) => {
-    //         removeContact({
-    //           variables: { id: contact.id },
-    //           update: accept,
-    //         });
-    //       }).then((data) => {
-    //         swal.insertQueueStep({
-    //           timer: 2000,
-    //           type: 'success',
-    //           title: contact.name,
-    //           text: 'Contact removed successfully'
-    //         });
-    //       }).catch(() => {
-    //         swal.insertQueueStep({
-    //           type: 'error',
-    //           title: 'An error has occurred!'
-    //         });
-    //       })
-    //   }]);
+  const removeHandler = useCallback(
+    () => {
+      removeContact({
+        variables: { id: contact.id },
+        update: () => setStep(Steps.success),
+      });
     },
-    [removeContact, contact, theme],
+    [removeContact, setStep, Steps, contact],
+  );
+  useEffect(
+    () => {
+      let timeout = null;
+      switch (step) {
+        case Steps.success:
+        case Steps.error:
+          console.log('Setting timeout', step);
+          timeout = setTimeout(setStep, 2000, Steps.default);
+          break;
+        default: break;
+      }
+      return () => {
+        if (timeout) {
+          clearTimeout(timeout);
+        }
+      };
+    },
+    [step, setStep, Steps],
+  );
+  useEffect(
+    () => {
+      if (loading) {
+        setStep(Steps.progress);
+      }
+    },
+    [loading],
+  );
+  useEffect(
+    () => {
+      if (error) {
+        setStep(Steps.error);
+      }
+    },
+    [error],
   );
   return (
     <>
@@ -107,7 +117,14 @@ export const ContactEditor = ({ contact }) => {
         contact={contact}
         open={step === Steps.confirm}
         onClose={prevStep}
-        onConfirm={nextStep}
+        onConfirm={removeHandler}
+      />
+      <ProgressDialog
+        open={step === Steps.progress}
+      />
+      <StatusDialog
+        open={[Steps.success, Steps.error].includes(step)}
+        success={step !== Steps.error}
       />
     </>
   );

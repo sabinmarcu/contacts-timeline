@@ -2,6 +2,8 @@
 
 import React from 'react';
 import { useSubscription, useQuery } from '@apollo/react-hooks';
+import { TransitionGroup, CSSTransition } from 'react-transition-group';
+import { css } from 'linaria';
 
 import Contact from '../contact';
 
@@ -17,6 +19,36 @@ import {
 import Contacts from '../../graphql/contacts/list.gql';
 // $FlowFixMe
 import ContactsSubscription from '../../graphql/contacts/subscription.gql';
+
+const animationDuration = 1;
+const rawAnimations = {
+  neutral: css`
+    transition: all ${animationDuration}s ease-out;
+    transform: none !important;
+    opacity: 1;
+  `,
+  appearIn: css`
+    transform: translateY(150px) !important;
+    opacity: 0;
+  `,
+  fadeOut: css`
+    transition: all ${animationDuration}s ease-out;
+    opacity: 0;
+  `,
+};
+const animations = {
+  enter: rawAnimations.appearIn,
+  enterActive: rawAnimations.neutral,
+  enterDone: rawAnimations.neutral,
+  appear: rawAnimations.appearIn,
+  appearActive: rawAnimations.neutral,
+  appearDone: rawAnimations.neutral,
+  exit: rawAnimations.neutral,
+  exitActive: rawAnimations.fadeOut,
+  exitDone: rawAnimations.fadeOut,
+};
+
+console.log(animations);
 
 export const ContactsList = () => {
   const { data, error, loading } = useQuery(Contacts);
@@ -72,9 +104,17 @@ export const ContactsList = () => {
   return (
     <Wrapper>
       <List amount={contacts.length} columns={3}>
-        {contacts.map(({ id, ...rest }) => (
-          <Contact key={id} contact={{ id, ...rest }} />
-        ))}
+        <TransitionGroup component={null}>
+          {contacts.map(({ id, ...rest }) => (
+            <CSSTransition
+              classNames={{ ...animations }}
+              timeout={animationDuration * 1000}
+              key={id}
+            >
+              <Contact contact={{ id, ...rest }} />
+            </CSSTransition>
+          ))}
+        </TransitionGroup>
       </List>
     </Wrapper>
   );

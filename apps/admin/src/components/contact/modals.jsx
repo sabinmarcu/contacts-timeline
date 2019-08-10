@@ -1,6 +1,8 @@
 // @flow
 
-import React from 'react';
+import React, {
+  useMemo,
+} from 'react';
 import {
   Dialog,
   DialogTitle,
@@ -11,11 +13,38 @@ import {
   Avatar,
   DialogActions,
   Button,
+  DialogContent,
+  DialogContentText,
+  CircularProgress,
+  useTheme,
 } from '@material-ui/core';
-import { styled } from 'linaria/react';
+import {
+  Check as SuccessIcon,
+  Clear as ErrorIcon,
+} from '@material-ui/icons';
 import {
   type Contact,
 } from '@ct/prisma';
+
+const styles = {
+  content: {
+    display: 'flex',
+    flexFlow: 'column nowrap',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  icon: {
+    width: 100,
+    height: 100,
+    margin: 10,
+  },
+  success: ({ palette: { primary: { main } } }) => ({
+    color: main,
+  }),
+  error: ({ palette: { secondary: { main } } }) => ({
+    color: main,
+  }),
+};
 
 export const AlertDialog = ({
   contact: {
@@ -29,7 +58,7 @@ export const AlertDialog = ({
   onConfirm,
 }: {
   contact: Contact,
-  open: Function,
+  open: boolean,
   onClose: Function,
   onConfirm: Function,
 }) => (
@@ -52,5 +81,46 @@ export const AlertDialog = ({
     </DialogActions>
   </Dialog>
 );
+
+export const ProgressDialog = ({ open }: { open: boolean }) => (
+  <Dialog open={open}>
+    <DialogTitle>Removing contact...</DialogTitle>
+    <DialogContent style={styles.content}>
+      <CircularProgress style={styles.icon} />
+    </DialogContent>
+    <DialogActions />
+  </Dialog>
+);
+
+export const StatusDialog = ({
+  open,
+  success,
+  error,
+}: {
+  open: boolean,
+  success: boolean,
+  error?: string,
+}) => {
+  const theme = useTheme();
+  const style = useMemo(
+    () => styles[success ? 'success' : 'error'](theme),
+    [theme, success],
+  );
+  return (
+    <Dialog open={open}>
+      <DialogTitle>{success ? 'Success!' : 'An error has occurred'}</DialogTitle>
+      <DialogContent style={styles.content}>
+        {success
+          ? <SuccessIcon style={{ ...styles.icon, ...style }} />
+          : <ErrorIcon style={{ ...styles.icon, ...style }} />
+        }
+        <DialogContentText>
+          {success ? 'The contact has been removed!' : error}
+        </DialogContentText>
+      </DialogContent>
+      <DialogActions />
+    </Dialog>
+  );
+};
 
 export default AlertDialog;
